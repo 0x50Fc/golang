@@ -1,7 +1,7 @@
 package #NS#
 
 import (
-	"git.sc.weibo.com/kk/microservice/golang/micro"
+	"github.com/hailongz/golang/micro"
 )
 
 func (S *Service) #NAME#(app micro.IContext, task *#TASK#) (#DATA#, error) {

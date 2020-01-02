@@ -129,7 +129,7 @@ export function walk(basePath: string, outDir: string): void {
 
                 if (isDBObject) {
                     vs.push("import (\n");
-                    vs.push('\t"git.sc.weibo.com/kk/microservice/golang/db"\n');
+                    vs.push('\t"github.com/hailongz/golang/db"\n');
                     vs.push(")\n\n");
                 }
 

@@ -1,0 +1,39 @@
+{
+    "title": "用户服务",
+    "name": "kk-user",
+    "errno": 1000000,
+    "cache": {
+        "maxSecond": 1800
+    },
+    "table": {
+        "count": 16
+    },
+    "db": {
+        "prefix": "user_",
+        "rd": {
+            "title": "读数据库",
+            "name": "mysql",
+            "url": "root:123456@tcp(127.0.0.1:3306)/kk?charset=utf8mb4",
+            "maxIdleConns": 1,
+            "maxOpenConns": 6
+        },
+        "wd": {
+            "title": "写数据库",
+            "name": "mysql",
+            "url": "root:123456@tcp(127.0.0.1:3306)/kk?charset=utf8mb4",
+            "maxIdleConns": 1,
+            "maxOpenConns": 6
+        }
+    },
+    "redis": {
+        "prefix": "user_",
+        "default": {
+            "addr": "127.0.0.1:6379",
+            "password": "",
+            "db": 0
+        }
+    },
+    "httpd": {
+        "addr": ":8080"
+    }
+}

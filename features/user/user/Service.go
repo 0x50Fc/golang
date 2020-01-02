@@ -1,4 +1,4 @@
-package #NS#
+package user
 
 import (
 	"github.com/hailongz/golang/micro"

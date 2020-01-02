@@ -1,0 +1,5 @@
+package user
+
+const ERROR_NOT_FOUND = 0x0001
+const ERROR_USER_ISEXIT = 0x0002
+const ERROR_NOT_KEY = 0x0003

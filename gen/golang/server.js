@@ -100,7 +100,7 @@ function walk(basePath, outDir) {
                 ];
                 if (isDBObject) {
                     vs.push("import (\n");
-                    vs.push('\t"git.sc.weibo.com/kk/microservice/golang/db"\n');
+                    vs.push('\t"github.com/hailongz/golang/db"\n');
                     vs.push(")\n\n");
                 }
                 vs.push("type ");

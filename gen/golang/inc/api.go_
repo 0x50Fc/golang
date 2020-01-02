@@ -1,8 +1,8 @@
 package #NS#
 
 import (
-	"git.sc.weibo.com/kk/microservice/golang/dynamic"
-	"git.sc.weibo.com/kk/microservice/golang/micro"
+	"github.com/hailongz/golang/dynamic"
+	"github.com/hailongz/golang/micro"
 )
 
 func API_#NAME#(cli micro.Client, task *#TASK#) (#DATA#, error) {
