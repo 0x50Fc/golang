@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/hailongz/golang/duktape"
-	less "github.com/hailongz/golang/serverless/app"
+	less "github.com/hailongz/golang/ss/app"
 )
 
 func pushRequire(dir string, ctx *duktape.Context, store less.IStore) {

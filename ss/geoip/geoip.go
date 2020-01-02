@@ -8,7 +8,7 @@ import (
 
 	"github.com/hailongz/golang/duktape"
 	"github.com/hailongz/golang/dynamic"
-	less "github.com/hailongz/golang/serverless/app"
+	less "github.com/hailongz/golang/ss/app"
 	"github.com/oschwald/geoip2-golang"
 )
 

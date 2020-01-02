@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/hailongz/golang/duktape"
-	less "github.com/hailongz/golang/serverless/app"
+	less "github.com/hailongz/golang/ss/app"
 )
 
 func toInt64(ctx *duktape.Context, idx int, defaultValue int64) int64 {

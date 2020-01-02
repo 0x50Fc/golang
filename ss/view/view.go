@@ -14,7 +14,7 @@ import (
 	"github.com/hailongz/golang/canvas/gg"
 	"github.com/hailongz/golang/duktape"
 	"github.com/hailongz/golang/http"
-	less "github.com/hailongz/golang/serverless/app"
+	less "github.com/hailongz/golang/ss/app"
 	"github.com/hailongz/golang/view"
 )
 

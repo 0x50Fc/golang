@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/hailongz/golang/duktape"
-	less "github.com/hailongz/golang/serverless/app"
+	less "github.com/hailongz/golang/ss/app"
 )
 
 func init() {

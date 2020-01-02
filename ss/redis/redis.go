@@ -6,7 +6,7 @@ import (
 
 	"github.com/hailongz/golang/duktape"
 	"github.com/hailongz/golang/dynamic"
-	less "github.com/hailongz/golang/serverless/app"
+	less "github.com/hailongz/golang/ss/app"
 	R "gopkg.in/redis.v5"
 )
 
