@@ -1,0 +1,28 @@
+
+syntax = "proto3";
+
+package kk;
+
+message Request {
+	
+    /**
+	 * 跟踪ID
+	 */
+    string trace = 1;
+
+    /**
+	 * 路径
+	 */
+    string path = 2;
+    
+    /**
+	 * 类型
+	 */
+    string type = 3;
+
+    /**
+	 * 数据
+	 */
+	bytes content = 4;
+
+}

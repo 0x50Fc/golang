@@ -1,0 +1,42 @@
+
+syntax = "proto3";
+
+package kk;
+
+message Message {
+	
+	enum Type { 
+	   PING = 0;
+	   PONG = 1;
+	   REQUEST = 2;
+	   RESPONSE = 3;
+ 	}
+
+	/**
+	 * 消息类型
+	 */
+	Type type = 1;	
+
+    /**
+	 * 来源
+	 */
+	int64 from = 2;	
+
+	/**
+	 * 目标
+	 */
+	int64 to = 3;	
+
+	/**
+	 * 客户端请求时间
+	 * @type {int64}
+	 */
+	int64 atime = 4;	
+	
+	/**
+	 * 数据
+	 * @type {bytes}
+	 */
+	bytes data = 5;
+
+}

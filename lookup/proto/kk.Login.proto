@@ -1,0 +1,17 @@
+
+syntax = "proto3";
+
+package kk;
+
+message Login {
+	
+    /**
+	 * 服务名称
+	 */
+    string name = 1
+
+    /**
+	 * 服务域名
+	 */
+    strong domain = 2;
+}

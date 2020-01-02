@@ -1,0 +1,55 @@
+{
+    "redis": {
+        "prefix": "less_",
+        "addr": "127.0.0.1:6379",
+        "password": "",
+        "db": 0
+    },
+    "geoip":{
+        "db":"/Users/hailong11/Downloads/GeoLite2-City_20191008/GeoLite2-City.mmdb"
+    },
+    "db": {
+        "prefix": "feed_",
+        "rd": {
+            "title": "读数据库",
+            "name": "mysql",
+            "url": "root:123456@tcp(127.0.0.1:3306)/kk?charset=utf8mb4",
+            "maxIdleConns": 1,
+            "maxOpenConns": 6
+        },
+        "wd": {
+            "title": "写数据库",
+            "name": "mysql",
+            "url": "root:123456@tcp(127.0.0.1:3306)/kk?charset=utf8mb4",
+            "maxIdleConns": 1,
+            "maxOpenConns": 6
+        }
+    },
+    "sessionKey": "kk",
+    "_mq": {
+        "consumer": {
+            "type": "nsq",
+            "addr": "10.13.131.147:4161",
+            "topic": "kk",
+            "channel": "email"
+        }
+    },
+    "_collector": [
+        {
+            "interval": 6000,
+            "name": "mysql",
+            "data": {}
+        }
+    ],
+    "influx": {
+        "type": "influx",
+        "addr": "http://10.13.131.142:8086",
+        "user": "",
+        "password": "",
+        "db": "kk"
+    },
+    "httpd": {
+        "addr": ":8080"
+    },
+    "app": {}
+}

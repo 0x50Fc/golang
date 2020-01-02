@@ -1,0 +1,23 @@
+
+syntax = "proto3";
+
+package kk;
+
+message Response {
+	
+    /**
+	 * 跟踪ID
+	 */
+    string trace = 1;
+
+    /**
+	 * 类型
+	 */
+    string type = 2;
+
+    /**
+	 * 数据
+	 */
+	bytes content = 3;
+
+}

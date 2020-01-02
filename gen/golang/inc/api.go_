@@ -1,0 +1,21 @@
+package #NS#
+
+import (
+	"git.sc.weibo.com/kk/microservice/golang/dynamic"
+	"git.sc.weibo.com/kk/microservice/golang/micro"
+)
+
+func API_#NAME#(cli micro.Client, task *#TASK#) (#DATA#, error) {
+
+	var ret #DATA# = #DATA_INIT#
+
+	data, err := cli.Send(#METHOD#, task.GetName(), task)
+
+	if err != nil {
+		return #DATA_DEFAULT#, err
+	}
+
+	dynamic.SetValue(&ret, data)
+	
+	return ret, nil
+}
