@@ -1,7 +1,7 @@
 {
     "title": "App服务",
     "name": "kk-app",
-    "errno": 1000000,
+    "errno": 2000000,
     "cache": {
         "maxSecond": 1800
     },
@@ -26,18 +26,17 @@
         }
     },
     "redis": {
-        "prefix": "kk_app_",
+        "prefix": "app_",
         "default": {
             "addr": "127.0.0.1:6379",
             "password": "",
             "db": 0
         }
     },
-    "client": {
-        "baseURL": "http://127.0.0.1/",
+    "client":{
         "kk-id":"http://127.0.0.1:8002/kk-id"
     },
     "httpd": {
-        "addr": ":8082"
+        "addr": ":8080"
     }
 }
