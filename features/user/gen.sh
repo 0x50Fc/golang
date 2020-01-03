@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NAME=user
+NAME=auth
 
 node ../../gen/main.js golang ./ts ./$NAME
 

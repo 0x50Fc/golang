@@ -11,24 +11,61 @@ import (
 )
 
 func (S *Service) Query(app micro.IContext, task *QueryTask) (*QueryData, error) {
+
+	p := int32(dynamic.IntValue(task.P, 1))
+	n := int32(dynamic.IntValue(task.N, 20))
+
+	if n < 1 {
+		n = 20
+	}
+
+	if p < 1 {
+		p = 1
+	}
+
+	data := QueryData{}
+
+	if task.P != nil {
+
+		countTask := CountTask{}
+
+		countTask.Ids = task.Ids
+		countTask.Name = task.Name
+		countTask.Q = task.Q
+		countTask.Prefix = task.Prefix
+		countTask.Suffix = task.Suffix
+
+		countData, err := S.Count(app, &countTask)
+
+		if err != nil {
+			return nil, err
+		}
+
+		data.Page = &QueryDataPage{
+			Total: countData.Total,
+			P:     p,
+			N:     n,
+			Count: countData.Total / n,
+		}
+
+		if countData.Total%n != 0 {
+			data.Page.Count++
+		}
+
+	}
+
 	conn, prefix, err := app.GetDB("rd")
 
 	if err != nil {
 		return nil, err
 	}
-	q := QueryData{}
-	v := User{}
-	var args []interface{}
-	p := int32(dynamic.IntValue(task.P, 1))
-	n := int32(dynamic.IntValue(task.N, 20))
-	if n < 1 {
-		n = 20
-	}
-	if p < 1 {
-		p = 1
-	}
+
 	sql := bytes.NewBuffer(nil)
-	sql.WriteString(" WHERE 1=1")
+
+	args := []interface{}{}
+
+	sql.WriteString(" WHERE 1")
+
 	if task.Ids != nil {
 		sql.WriteString(" AND id IN (")
 		ids := strings.Split(dynamic.StringValue(task.Ids, ""), ",")
@@ -67,45 +104,37 @@ func (S *Service) Query(app micro.IContext, task *QueryTask) (*QueryData, error)
 		sql.WriteString(" AND name LIKE ?")
 		args = append(args, fmt.Sprintf("%%%s", task.Prefix))
 	}
-	count, err := db.Count(conn, &v, prefix, sql.String(), args...)
-	if err != nil {
-		return nil, err
-	}
-	if count == 0 {
-		q.Page = &QueryDataPage{
-			Total: 0,
-			P:     p,
-			N:     n,
-			Count: 0,
-		}
-		return &q, nil
-	}
 
-	if task.P != nil && task.N != nil {
-		sql.WriteString(fmt.Sprintf(" ORDER BY id ASC LIMIT %d,%d", (p-1)*n, n))
-	}
+	sql.WriteString(fmt.Sprintf(" ORDER BY id DESC LIMIT %d,%d", (p-1)*n, n))
+
+	v := User{}
+
+	data.Items = []*User{}
 
 	rs, err := db.Query(conn, &v, prefix, sql.String(), args...)
+
 	if err != nil {
 		return nil, err
 	}
+
 	defer rs.Close()
-	scanner := db.NewScaner(&v)
+
+	scaner := db.NewScaner(&v)
+
 	for rs.Next() {
-		err = scanner.Scan(rs)
+
+		err = scaner.Scan(rs)
+
 		if err != nil {
 			return nil, err
 		}
+
 		item := User{}
 		item = v
-		q.Items = append(q.Items, &item)
-		q.Page = &QueryDataPage{
-			Total: int32(count),
-			P:     p,
-			N:     n,
-			Count: (int32(count) + n - 1) / n,
-		}
 
+		data.Items = append(data.Items, &item)
 	}
-	return &q, nil
+
+	return &data, nil
+
 }

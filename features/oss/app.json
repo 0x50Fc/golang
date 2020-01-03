@@ -1,0 +1,16 @@
+{
+    "title": "对象存储服务",
+    "name": "kk-oss",
+    "errno": 9000000,
+    "oss": {
+        "type": "ali",
+        "accessKey": "",
+        "secretKey": "",
+        "endpoint": "",
+        "bucket": "",
+        "baseURL": ""
+    },
+    "httpd": {
+        "addr": ":8080"
+    }
+}

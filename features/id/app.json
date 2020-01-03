@@ -1,0 +1,10 @@
+{
+    "title": "ID服务",
+    "name": "kk-id",
+    "errno": 4000000,
+    "aid": 0,
+    "nid": 0,
+    "httpd": {
+        "addr": ":8080"
+    }
+}
