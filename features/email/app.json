@@ -1,0 +1,15 @@
+{
+    "title": "邮件服务",
+    "name": "kk-email",
+    "errno": 6000000,
+    "email": {
+        "from": "",
+        "addr": "exmail.qq.com",
+        "port": 587,
+        "user": "",
+        "password": ""
+    },
+    "httpd": {
+        "addr": ":8080"
+    }
+}
