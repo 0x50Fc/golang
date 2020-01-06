@@ -116,7 +116,7 @@ func (S *Service) Get(app micro.IContext, task *GetTask) (*User, error) {
 			}
 
 			if cache != nil {
-				SetCache(&v, expires, cache)
+				SetCache(rs, expires, cache)
 			}
 
 			return rs, nil
@@ -129,5 +129,5 @@ func (S *Service) Get(app micro.IContext, task *GetTask) (*User, error) {
 		SetCache(&v, expires, cache)
 	}
 
-	return nil, nil
+	return &v, nil
 }
