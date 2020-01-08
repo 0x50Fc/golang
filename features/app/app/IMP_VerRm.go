@@ -33,7 +33,7 @@ func (S *Service) VerRm(app micro.IContext, task *VerRmTask) (*Ver, error) {
 	cache, _ := app.GetCache("default")
 
 	if cache != nil {
-		cache.Del(fmt.Sprintf("%d_%d", task.Appid, task.Ver))
+		cache.DelItem(fmt.Sprintf("%d", task.Appid), fmt.Sprintf("%d", task.Ver))
 	}
 
 	return &v, nil

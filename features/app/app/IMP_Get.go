@@ -21,7 +21,7 @@ func (S *Service) Get(app micro.IContext, task *GetTask) (*App, error) {
 
 	if cache != nil {
 
-		text, err := cache.Get(fmt.Sprintf("%d", task.Id), expires)
+		text, err := cache.GetItem(fmt.Sprintf("%d", task.Id), "app", expires)
 
 		if err == nil {
 			err = json.Unmarshal([]byte(dynamic.StringValue(text, "")), &v)
@@ -63,7 +63,7 @@ func (S *Service) Get(app micro.IContext, task *GetTask) (*App, error) {
 
 	if cache != nil {
 		b, _ := json.Marshal(&v)
-		cache.Set(fmt.Sprintf("%d", task.Id), string(b), expires)
+		cache.SetItem(fmt.Sprintf("%d", task.Id), "app", string(b), expires)
 	}
 
 	return &v, nil
