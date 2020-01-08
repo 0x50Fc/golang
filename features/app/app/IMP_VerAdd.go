@@ -22,14 +22,14 @@ func (S *Service) VerAdd(app micro.IContext, task *VerAddTask) (*Ver, error) {
 
 	err = db.Transaction(conn, func(conn db.Database) error {
 
-		p, err := db.Get(conn, &a, prefix, "WHERE id=? AND ver=?", task.Appid)
+		p, err := db.Get(conn, &a, prefix, "WHERE id=?", task.Appid)
 
 		if err != nil {
 			return err
 		}
 
 		if p == nil {
-			return micro.NewError(ERROR_NOT_FOUND, "未找到App版本")
+			return micro.NewError(ERROR_NOT_FOUND, "未找到App")
 		}
 
 		v.Appid = task.Appid

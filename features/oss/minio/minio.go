@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/hailongz/golang/dynamic"
-	"git.sc.weibo.com/kk/microservice/oss/oss"
+	"github.com/hailongz/golang/features/oss/oss"
 	"github.com/minio/minio-go"
 )
 

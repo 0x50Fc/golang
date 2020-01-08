@@ -11,9 +11,9 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/hailongz/golang/dynamic"
-	"git.sc.weibo.com/kk/microservice/oss/oss"
 	Ali "github.com/aliyun/aliyun-oss-go-sdk/oss"
+	"github.com/hailongz/golang/dynamic"
+	"github.com/hailongz/golang/features/oss/oss"
 )
 
 func init() {

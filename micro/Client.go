@@ -63,7 +63,7 @@ func GetClient(app IContext, name string) (Client, error) {
 		if v == nil {
 			baseURL = dynamic.StringValue(dynamic.Get(cfg, "baseURL"), "") + name + "/"
 		} else {
-			baseURL = dynamic.StringValue(dynamic.Get(v, "baseURL"), "")
+			baseURL = dynamic.StringValue(v, "")
 		}
 
 		if baseURL == "" {
