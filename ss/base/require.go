@@ -26,7 +26,11 @@ func pushRequire(dir string, ctx *duktape.Context, store less.IStore) {
 					p = p + ".js"
 				}
 
-				p = path.Clean(dir + "/" + p)
+				if strings.HasPrefix(p, "/") {
+					p = path.Clean("." + p)
+				} else {
+					p = path.Clean(dir + "/" + p)
+				}
 
 				// log.Println(p)
 
@@ -56,7 +60,7 @@ func pushRequire(dir string, ctx *duktape.Context, store less.IStore) {
 
 				buf := bytes.NewBuffer(nil)
 
-				buf.WriteString("(function(module,exports,require){ ")
+				buf.WriteString("(function(module,exports,require,__dirname){ ")
 
 				if b != nil {
 					buf.Write(b)
@@ -75,13 +79,15 @@ func pushRequire(dir string, ctx *duktape.Context, store less.IStore) {
 					return 0
 				}
 
-				ctx.Dup(-2)                          // 4
-				ctx.PushObject()                     // 5
-				ctx.Dup(-1)                          // 6
-				ctx.PutPropString(-3, "exports")     // 5
-				pushRequire(path.Dir(p), ctx, store) // 6
+				ctx.Dup(-2)                      // 4
+				ctx.PushObject()                 // 5
+				ctx.Dup(-1)                      // 6
+				ctx.PutPropString(-3, "exports") // 5
+				dir := path.Dir(p)
+				pushRequire(dir, ctx, store) // 6
+				ctx.PushString(dir)
 
-				if ctx.Pcall(3) != duktape.ExecSuccess {
+				if ctx.Pcall(4) != duktape.ExecSuccess {
 					err = ctx.ToError(-1)
 					ctx.PopN(3)
 					log.Println("[ERROR]", err)

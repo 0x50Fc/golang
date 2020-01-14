@@ -88,7 +88,16 @@ declare interface Assets {
 
 declare var assets: Assets
 
+declare interface FS {
+    putContent(path: string, content: string | ArrayBuffer | ArrayBufferView): void
+    remove(path: string): void
+}
+
+declare var fs: FS
+
 declare var app: any
+
+declare var __dirname: string
 
 declare function require(path: string): any
 

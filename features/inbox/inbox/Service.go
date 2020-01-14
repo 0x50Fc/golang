@@ -1,7 +1,7 @@
-package email
+package inbox
 
 import (
-	"github.com/hailongz/golang//micro"
+	"github.com/hailongz/golang/micro"
 )
 
 func init() {

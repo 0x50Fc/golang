@@ -8,12 +8,12 @@ import (
 	"syscall"
 	"time"
 
-	_ "git.sc.weibo.com/kk/microservice/email/email"
-	"github.com/hailongz/golang//dynamic"
-	"github.com/hailongz/golang//micro"
-	"github.com/hailongz/golang//stat"
-	"github.com/hailongz/golang//svc"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/hailongz/golang/dynamic"
+	_ "github.com/hailongz/golang/features/inbox/inbox"
+	"github.com/hailongz/golang/micro"
+	"github.com/hailongz/golang/stat"
+	"github.com/hailongz/golang/svc"
 )
 
 func main() {

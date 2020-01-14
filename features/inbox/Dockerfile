@@ -1,8 +1,8 @@
 FROM registry.dpool.sina.com.cn/kk/kk-golang:latest
 
-COPY ./main /bin/kk-app
+COPY ./main /bin/kk-inbox
 
-RUN chmod +x /bin/kk-app
+RUN chmod +x /bin/kk-inbox
 
 COPY ./app.json /app.josn
 
@@ -16,4 +16,4 @@ ENV KK_VERSION 1.0
 
 WORKDIR /
 
-CMD kk-app
+CMD kk-inbox
