@@ -1,7 +1,8 @@
-package auth
+package doc
 
 type RmTask struct {
-	Key	string	`json:"key" name:"key" title:"键值"`
+	Id	int64	`json:"id" name:"id" title:"ID"`
+	Uid	int64	`json:"uid" name:"uid" title:"用户ID"`
 }
 
 func (T *RmTask) GetName() string {

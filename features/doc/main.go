@@ -8,9 +8,9 @@ import (
 	"syscall"
 	"time"
 
-	_ "git.sc.weibo.com/kk/microservice/email/email"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/hailongz/golang/dynamic"
+	_ "github.com/hailongz/golang/features/doc/doc"
 	"github.com/hailongz/golang/micro"
 	"github.com/hailongz/golang/stat"
 	"github.com/hailongz/golang/svc"

@@ -1,37 +1,28 @@
 
 import { BaseResponse, ErrCode } from "./lib/BaseResponse"
 import { int64, int32 } from "./lib/less";
-import { AuthType } from "./Auth";
+import { Doc } from './Doc';
 
 /**
- * 创建
+ * 删除
  * @method POST
  */
 interface Request {
 
     /**
-     * 键值
-     */
-    key: string
+    * ID
+    */
+    id: int64
 
     /**
-     * 类型
-     */
-    type?: AuthType
+    * 用户ID
+    */
+    uid: int64
 
-    /**
-     * 值
-     */
-    value: string
-
-    /**
-     * 超时时间(秒)
-     */
-    expires: int32
 }
 
 interface Response extends BaseResponse {
-    data?: any
+    data?: Doc
 }
 
 export function handle(req: Request): Response {

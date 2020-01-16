@@ -43,11 +43,22 @@ func (S *Service) Rm(app micro.IContext, task *RmTask) (*App, error) {
 		return nil, err
 	}
 
+	ver := Ver{}
+
+	_, err = db.DeleteWithSQL(conn, &ver, prefix, " WHERE appid=?", v.Id)
+
+	if err != nil {
+		return nil, err
+	}
+
 	cache, _ := app.GetCache("default")
 
 	if cache != nil {
 		cache.Del(fmt.Sprintf("%d", task.Id))
 	}
+
+	// MQ 消息
+	app.SendMessage(task.GetName(), &v)
 
 	return &v, nil
 }

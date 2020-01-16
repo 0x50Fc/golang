@@ -1,8 +1,8 @@
 package email
 
 import (
-	"github.com/hailongz/golang//dynamic"
-	"github.com/hailongz/golang//micro"
+	"github.com/hailongz/golang/dynamic"
+	"github.com/hailongz/golang/micro"
 	"gopkg.in/gomail.v2"
 )
 

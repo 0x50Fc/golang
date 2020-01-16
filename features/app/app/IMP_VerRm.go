@@ -36,5 +36,8 @@ func (S *Service) VerRm(app micro.IContext, task *VerRmTask) (*Ver, error) {
 		cache.DelItem(fmt.Sprintf("%d", task.Appid), fmt.Sprintf("%d", task.Ver))
 	}
 
+	// MQ 消息
+	app.SendMessage(task.GetName(), &v)
+
 	return &v, nil
 }

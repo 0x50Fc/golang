@@ -1,7 +1,7 @@
 
 import { BaseResponse, ErrCode } from "./lib/BaseResponse"
 import { int64, int32 } from "./lib/less";
-import { AuthType } from "./Auth";
+import { DocType, Doc } from "./Doc";
 
 /**
  * 创建
@@ -10,28 +10,44 @@ import { AuthType } from "./Auth";
 interface Request {
 
     /**
-     * 键值
-     */
-    key: string
+    * 父级ID
+    */
+    pid?: int64
 
     /**
-     * 类型
+     * 标题
      */
-    type?: AuthType
+    title: string
 
     /**
-     * 值
-     */
-    value: string
+    * 用户ID
+    */
+    uid: int64
 
     /**
-     * 超时时间(秒)
+    * 类型
+    */
+    type?: DocType
+
+    /**
+     * 扩展名
      */
-    expires: int32
+    ext?: string
+
+    /**
+     * 搜索关键字
+     */
+    keyword?: string
+
+    /**
+     * 其他数据  JSON
+     */
+    options?: string
+
 }
 
 interface Response extends BaseResponse {
-    data?: any
+    data?: Doc
 }
 
 export function handle(req: Request): Response {

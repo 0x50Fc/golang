@@ -93,5 +93,8 @@ func (S *Service) VerSet(app micro.IContext, task *VerSetTask) (*Ver, error) {
 		cache.DelItem(fmt.Sprintf("%d", task.Appid), fmt.Sprintf("%d", task.Ver))
 	}
 
+	// MQ 消息
+	app.SendMessage(task.GetName(), &v)
+
 	return &v, nil
 }

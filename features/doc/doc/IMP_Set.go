@@ -1,7 +1,8 @@
-package app
+package doc
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/hailongz/golang/db"
 	"github.com/hailongz/golang/dynamic"
@@ -9,8 +10,9 @@ import (
 	"github.com/hailongz/golang/micro"
 )
 
-func (S *Service) Set(app micro.IContext, task *SetTask) (*App, error) {
-	v := App{}
+func (S *Service) Set(app micro.IContext, task *SetTask) (*Doc, error) {
+
+	v := Doc{}
 
 	conn, prefix, err := app.GetDB("wd")
 
@@ -18,32 +20,46 @@ func (S *Service) Set(app micro.IContext, task *SetTask) (*App, error) {
 		return nil, err
 	}
 
-	prefix = Prefix(app, prefix, task.Id)
+	prefix = Prefix(app, prefix, task.Uid)
 
-	p, err := db.Get(conn, &v, prefix, "WHERE id=?", task.Id)
+	p, err := db.Get(conn, &v, prefix, "WHERE uid=? AND id=?", task.Uid, task.Id)
 
 	if err != nil {
 		return nil, err
 	}
 
 	if p == nil {
-		return nil, micro.NewError(ERROR_NOT_FOUND, "未找到App")
+		return nil, micro.NewError(ERROR_NOT_FOUND, "未找到文档")
 	}
 
 	keys := map[string]bool{}
 
-	if task.Uid != nil {
+	pid := dynamic.IntValue(task.Pid, 0)
 
-		v.Uid = dynamic.IntValue(task.Uid, 0)
+	if task.Pid != nil && v.Pid != pid {
 
-		keys["uid"] = true
-	}
+		var p *Doc = nil
 
-	if task.Ver != nil {
+		if pid != 0 {
+			getTask := GetTask{}
+			getTask.Id = pid
+			getTask.Uid = task.Uid
+			p, err = S.Get(app, &getTask)
+			if err != nil {
+				return nil, err
+			}
+		}
 
-		v.Ver = int32(dynamic.IntValue(task.Ver, 0))
+		v.Pid = pid
 
-		keys["ver"] = true
+		if p != nil {
+			v.Path = fmt.Sprintf("%s%d/", p.Path, pid)
+		} else {
+			v.Path = ""
+		}
+
+		keys["pid"] = true
+		keys["path"] = true
 	}
 
 	if task.Title != nil {
@@ -51,6 +67,20 @@ func (S *Service) Set(app micro.IContext, task *SetTask) (*App, error) {
 		v.Title = dynamic.StringValue(task.Title, "")
 
 		keys["title"] = true
+	}
+
+	if task.Keyword != nil {
+
+		v.Keyword = dynamic.StringValue(task.Keyword, "")
+
+		keys["keyword"] = true
+	}
+
+	if task.Ext != nil {
+
+		v.Ext = dynamic.StringValue(task.Ext, "")
+
+		keys["ext"] = true
 	}
 
 	if task.Options != nil {
@@ -77,6 +107,16 @@ func (S *Service) Set(app micro.IContext, task *SetTask) (*App, error) {
 		keys["options"] = true
 	}
 
+	if dynamic.BooleanValue(task.Mtime, false) {
+		v.Mtime = time.Now().Unix()
+		keys["mtime"] = true
+	}
+
+	if dynamic.BooleanValue(task.Atime, false) {
+		v.Atime = time.Now().Unix()
+		keys["atime"] = true
+	}
+
 	if len(keys) > 0 {
 		_, err = db.UpdateWithKeys(conn, &v, prefix, keys)
 		if err != nil {
@@ -87,7 +127,7 @@ func (S *Service) Set(app micro.IContext, task *SetTask) (*App, error) {
 	cache, _ := app.GetCache("default")
 
 	if cache != nil {
-		cache.Del(fmt.Sprintf("%d", task.Id))
+		cache.Del(fmt.Sprintf("%d/%d", task.Uid, task.Id))
 	}
 
 	// MQ 消息

@@ -109,5 +109,8 @@ func (S *Service) VerAdd(app micro.IContext, task *VerAddTask) (*Ver, error) {
 		cache.Del(fmt.Sprintf("%d", task.Appid))
 	}
 
+	// MQ 消息
+	app.SendMessage(task.GetName(), &v)
+
 	return &v, nil
 }

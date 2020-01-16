@@ -1,8 +1,8 @@
-package auth
+package doc
 
 type GetTask struct {
-	Key	string	`json:"key" name:"key" title:"键值"`
-	Type	interface{}	`json:"type,omitempty" name:"type" title:"类型"`
+	Id	int64	`json:"id" name:"id" title:"ID"`
+	Uid	int64	`json:"uid" name:"uid" title:"用户ID"`
 }
 
 func (T *GetTask) GetName() string {

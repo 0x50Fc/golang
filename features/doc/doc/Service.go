@@ -1,4 +1,4 @@
-package email
+package doc
 
 import (
 	"github.com/hailongz/golang/micro"

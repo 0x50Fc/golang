@@ -3,7 +3,6 @@ package auth
 import (
 	"time"
 
-	"github.com/hailongz/golang/db"
 	"github.com/hailongz/golang/dynamic"
 	"github.com/hailongz/golang/json"
 	"github.com/hailongz/golang/micro"
@@ -31,7 +30,6 @@ func Subjoin(v string, output interface{}) interface{} {
 
 func (S *Service) Create(app micro.IContext, task *CreateTask) (interface{}, error) {
 
-	maxSecond := dynamic.IntValue(dynamic.GetWithKeys(app.GetConfig(), []string{"cache", "maxSecond"}), 1800)
 	stype := dynamic.StringValue(task.Type, AuthType_JSON)
 	expires := int64(task.Expires)
 	key := task.Key
@@ -51,88 +49,20 @@ func (S *Service) Create(app micro.IContext, task *CreateTask) (interface{}, err
 		output = task.Value
 	}
 
-	conn, prefix, err := app.GetDB("wd")
+	cli, prefix, err := app.GetRedis("default")
 
 	if err != nil {
 		return nil, err
 	}
 
-	v := Auth{}
-
-	err = func() error {
-
-		rs, err := db.Query(conn, &v, prefix, " WHERE `key`=?", key)
-
-		if err != nil {
-			return err
-		}
-
-		defer rs.Close()
-
-		if rs.Next() {
-
-			scaner := db.NewScaner(&v)
-
-			err = scaner.Scan(rs)
-
-			if err != nil {
-				return err
-			}
-
-		}
-
-		return nil
-	}()
+	_, err = cli.Set(prefix+key, task.Value, time.Second*time.Duration(expires)).Result()
 
 	if err != nil {
 		return nil, err
-	}
-
-	v.Key = task.Key
-
-	if v.Value != "" && stype == AuthType_JSON {
-		output = Subjoin(v.Value, output)
-		b, _ := json.Marshal(output)
-		v.Value = string(b)
-	} else {
-		v.Value = task.Value
-	}
-
-	v.Etime = time.Now().Unix() + expires
-
-	if v.Id == 0 {
-		_, err = db.Insert(conn, &v, prefix)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		_, err = db.UpdateWithKeys(conn, &v, prefix, map[string]bool{"value": true, "etime": true})
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	{
-		// 缓存
-		cli, prefix, err := app.GetRedis("default")
-
-		if err == nil {
-			tv := expires
-
-			if tv > maxSecond {
-				tv = maxSecond
-			}
-
-			_, _ = cli.Set(prefix+key, v.Value, time.Second*time.Duration(tv)).Result()
-
-		} else {
-			app.Println("[Redis] [ERROR]", err)
-		}
-
 	}
 
 	// MQ 消息
-	app.SendMessage(task.GetName(), &v)
+	app.SendMessage(task.GetName(), map[string]interface{}{"key": task.Key, "expires": task.Expires, "value": output})
 
 	return output, nil
 }

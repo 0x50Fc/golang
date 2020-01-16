@@ -135,7 +135,7 @@ type App struct {
 	qname         string
 }
 
-func NewApp(name string, errno int, config interface{}) (*App, error) {
+func NewApp(name string, errno int, config interface{}, ss []Service) (*App, error) {
 
 	var q mq.Producer = nil
 	var err error = nil
@@ -227,7 +227,7 @@ func NewApp(name string, errno int, config interface{}) (*App, error) {
 		id:            id,
 		qname:         qname}
 
-	for _, s := range defaultServices {
+	for _, s := range ss {
 		v.AddService(s)
 	}
 
@@ -288,7 +288,7 @@ func NewAppWithEnv() (*App, error) {
 		}
 	}
 
-	app, err := NewApp(dynamic.StringValue(dynamic.Get(config, "name"), "app"), int(dynamic.IntValue(dynamic.Get(config, "errno"), 0)), config)
+	app, err := NewApp(dynamic.StringValue(dynamic.Get(config, "name"), "app"), int(dynamic.IntValue(dynamic.Get(config, "errno"), 0)), config, defaultServices)
 
 	if err != nil {
 		return nil, err
@@ -332,7 +332,7 @@ func NewAppWithConfigFile(configFile string) (*App, error) {
 		return nil, err
 	}
 
-	return NewApp(dynamic.StringValue(dynamic.Get(config, "name"), "app"), int(dynamic.IntValue(dynamic.Get(config, "errno"), 0)), config)
+	return NewApp(dynamic.StringValue(dynamic.Get(config, "name"), "app"), int(dynamic.IntValue(dynamic.Get(config, "errno"), 0)), config, defaultServices)
 }
 
 func (A *App) Errno() int {
