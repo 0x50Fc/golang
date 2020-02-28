@@ -1,0 +1,36 @@
+{
+    "title": "权限服务",
+    "name": "kk-authority",
+    "errno": 1000000,
+    "cache": {
+        "maxSecond": 1800
+    },
+    "db": {
+        "prefix": "authority_",
+        "rd": {
+            "title": "读数据库",
+            "name": "mysql",
+            "url": "wbpay_formal:E1A9253fd9@tcp(10.77.113.180:4091)/kk?charset=utf8mb4",
+            "maxIdleConns": 1,
+            "maxOpenConns": 6
+        },
+        "wd": {
+            "title": "写数据库",
+            "name": "mysql",
+            "url": "wbpay_formal:E1A9253fd9@tcp(10.77.113.180:4091)/kk?charset=utf8mb4",
+            "maxIdleConns": 1,
+            "maxOpenConns": 6
+        }
+    },
+    "redis": {
+        "prefix": "kk_authority_",
+        "default": {
+            "addr": "10.77.113.181:14001",
+            "password": "",
+            "db": 0
+        }
+    },
+    "httpd": {
+        "addr": ":8082"
+    }
+}

@@ -1,4 +1,4 @@
-FROM registry.dpool.sina.com.cn/kk/kk-golang:latest
+FROM hailongz/kk-golang:latest
 
 COPY ./main /bin/kk-inbox
 

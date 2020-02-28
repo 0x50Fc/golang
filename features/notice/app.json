@@ -1,0 +1,36 @@
+{
+    "title": "消息通知服务",
+    "name": "kk-notice",
+    "errno": 1000000,
+    "table": {
+        "count": 128
+    },
+    "db": {
+        "prefix": "notice_",
+        "rd": {
+            "title": "读数据库",
+            "name": "mysql",
+            "url": "root:123456@tcp(127.0.0.1:3306)/kk?charset=utf8mb4",
+            "maxIdleConns": 1,
+            "maxOpenConns": 6
+        },
+        "wd": {
+            "title": "写数据库",
+            "name": "mysql",
+            "url": "root:123456@tcp(127.0.0.1:3306)/kk?charset=utf8mb4",
+            "maxIdleConns": 1,
+            "maxOpenConns": 6
+        }
+    },
+    "redis": {
+        "prefix": "notice_",
+        "default": {
+            "addr": "127.0.0.1:6379",
+            "password": "",
+            "db": 0
+        }
+    },
+    "httpd": {
+        "addr": ":8080"
+    }
+}
