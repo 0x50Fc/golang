@@ -1,8 +1,8 @@
 FROM hailongz/kk-golang:latest
 
-COPY ./main /bin/kk-notice
+COPY ./main /bin/kk-media
 
-RUN chmod +x /bin/kk-notice
+RUN chmod +x /bin/kk-media
 
 COPY ./app.json /app.josn
 
@@ -16,4 +16,4 @@ ENV KK_VERSION 1.0
 
 WORKDIR /
 
-CMD kk-notice
+CMD kk-media

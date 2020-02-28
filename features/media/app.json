@@ -1,12 +1,9 @@
 {
-    "title": "赞服务",
-    "name": "kk-like",
+    "title": "媒体服务",
+    "name": "kk-media",
     "errno": 1100000,
-    "table": {
-        "count": 128
-    },
     "db": {
-        "prefix": "like_",
+        "prefix": "media_",
         "rd": {
             "title": "读数据库",
             "name": "mysql",
@@ -23,7 +20,7 @@
         }
     },
     "redis": {
-        "prefix": "like_",
+        "prefix": "media_",
         "default": {
             "addr": "127.0.0.1:6379",
             "password": "",
