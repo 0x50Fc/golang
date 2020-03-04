@@ -1,0 +1,9 @@
+package wx
+
+const ERROR_NOT_FOUND = 0x0001
+const ERROR_CONFIG = 0x0002
+const ERROR_BODY = 0x0003
+const ERROR_MESSAGE_TYPE = 0x0004
+const ERROR_SIGN = 0x0005
+const ERROR_QR = 0x0006
+const ERROR_FORM_ID = 0x0007

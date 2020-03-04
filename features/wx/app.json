@@ -1,0 +1,49 @@
+{
+    "title": "微信服务",
+    "name": "kk-wx",
+    "errno": 1000000,
+    "open": {
+        "appid": "wx4b9bcfffa45de027"
+    },
+    "mp": {
+        "baseURL": [
+            "https://api.weixin.qq.com",
+            "https://api2.weixin.qq.com",
+            "https://sh.api.weixin.qq.com",
+            "https://sz.api.weixin.qq.com",
+            "https://hk.api.weixin.qq.com"
+        ],
+        "keys": {
+            "wx95c0c08b7831f2f9": "806703f1de7634f4b46aa08518cb89c4",
+            "wx4b9bcfffa45de027": "f0f2dabe40402061a4539d73218d3b42"
+        }
+    },
+    "db": {
+        "prefix": "wx_",
+        "rd": {
+            "title": "读数据库",
+            "name": "mysql",
+            "url": "root:123456@tcp(127.0.0.1:3306)/kk?charset=utf8mb4",
+            "maxIdleConns": 1,
+            "maxOpenConns": 6
+        },
+        "wd": {
+            "title": "写数据库",
+            "name": "mysql",
+            "url": "root:123456@tcp(127.0.0.1:3306)/kk?charset=utf8mb4",
+            "maxIdleConns": 1,
+            "maxOpenConns": 6
+        }
+    },
+    "redis": {
+        "prefix": "wx_",
+        "default": {
+            "addr": "127.0.0.1:6379",
+            "password": "",
+            "db": 0
+        }
+    },
+    "httpd": {
+        "addr": ":8082"
+    }
+}
