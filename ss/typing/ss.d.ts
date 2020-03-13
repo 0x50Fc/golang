@@ -205,3 +205,10 @@ declare interface Geoip {
 }
 
 declare var geoip: Geoip
+
+declare interface Crypto {
+    md5(s: string): string
+    sha1(s: string): string
+} 
+
+declare var crypto: Crypto

@@ -17,6 +17,7 @@ import (
 	_ "github.com/hailongz/golang/mq/nsq"
 	less "github.com/hailongz/golang/ss/app"
 	_ "github.com/hailongz/golang/ss/base"
+	_ "github.com/hailongz/golang/ss/crypto"
 	_ "github.com/hailongz/golang/ss/db"
 	_ "github.com/hailongz/golang/ss/geoip"
 	_ "github.com/hailongz/golang/ss/influx"

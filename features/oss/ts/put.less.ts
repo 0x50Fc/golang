@@ -27,6 +27,10 @@ interface Request {
     /**
      * 内容
      * 当 Type.Text || Type.Base64 时使用
+     * 当 Type.URL 时 JSON.stringify({
+     *  "url":"",
+     *  "header":{}
+     * })
      */
     content?: string
 
