@@ -1,0 +1,19 @@
+{
+    "title": "geetest",
+    "name": "kk-geetest",
+    "errno": 1000000,
+    "geetest":{
+        
+    },
+    "redis": {
+        "prefix": "geetest_",
+        "default": {
+            "addr": "127.0.0.1:6379",
+            "password": "",
+            "db": 0
+        }
+    },
+    "httpd": {
+        "addr": ":8080"
+    }
+}
