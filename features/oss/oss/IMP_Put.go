@@ -7,6 +7,8 @@ import (
 	"time"
 
 	"github.com/hailongz/golang/dynamic"
+	"github.com/hailongz/golang/http"
+	"github.com/hailongz/golang/json"
 	"github.com/hailongz/golang/micro"
 )
 
@@ -50,6 +52,40 @@ func (S *Service) Put(app micro.IContext, task *PutTask) (interface{}, error) {
 			if err != nil {
 				return nil, err
 			}
+			return nil, nil
+		}
+	case Type_URL:
+		{
+			var data interface{} = nil
+			err = json.Unmarshal([]byte(dynamic.StringValue(task.Content, "")), &data)
+			if err != nil {
+				return nil, err
+			}
+
+			options := http.Options{}
+			options.Url = dynamic.StringValue(dynamic.Get(data, "url"), "")
+			options.Method = "GET"
+			options.Headers = map[string]string{}
+			options.ResponseType = http.OptionResponseTypeByte
+			options.Timeout = time.Duration(dynamic.IntValue(dynamic.Get(data, "timeout"), 0)) * time.Millisecond
+
+			dynamic.Each(dynamic.Get(data, "header"), func(key interface{}, value interface{}) bool {
+				options.Headers[dynamic.StringValue(key, "")] = dynamic.StringValue(value, "")
+				return true
+			})
+
+			b, err := http.Send(&options)
+
+			if err != nil {
+				return nil, err
+			}
+
+			err = source.Put(task.Key, b.([]byte), header)
+
+			if err != nil {
+				return nil, err
+			}
+
 			return nil, nil
 		}
 	default:
