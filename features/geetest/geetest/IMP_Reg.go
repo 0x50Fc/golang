@@ -1,6 +1,7 @@
 package geetest
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/GeeTeam/gt3-golang-sdk/geetest"
@@ -29,7 +30,7 @@ func (S *Service) Reg(app micro.IContext, task *RegTask) (interface{}, error) {
 		return nil, err
 	}
 
-	_, err = redis.Set(prefix+task.Key, string(s), expires).Result()
+	_, err = redis.Set(prefix+task.Key, fmt.Sprintf("%d", s), expires).Result()
 
 	if err != nil {
 		return nil, err
