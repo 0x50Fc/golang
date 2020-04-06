@@ -1,0 +1,34 @@
+
+syntax = "proto3";
+
+package kk;
+
+message Request {
+	
+	/**
+	 * 请求ID
+	 */
+	int64 id = 1;
+	
+	/**
+	 * URI
+	 */
+	string uri = 2;
+
+    /**
+	 * 数据类型
+	 */
+    string type = 3;		
+    
+	/**
+	 * 数据
+	 * @type {bytes}
+	 */
+	bytes data = 4;
+
+	/**
+	 * 头
+	 */
+	map<string,string> header = 5;
+
+}

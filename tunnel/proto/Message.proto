@@ -1,0 +1,29 @@
+
+syntax = "proto3";
+
+package kk;
+
+message Message {
+	
+	/**
+	 * 来源地址
+	 */
+	string from = 1;
+	
+	/**
+	 * 目标地址
+	 */
+	string to = 2;
+
+    /**
+	 * 数据类型
+	 */
+    string type = 3;		
+    
+	/**
+	 * 数据
+	 * @type {bytes}
+	 */
+	bytes data = 4;
+
+}
