@@ -16,11 +16,15 @@ func getConnWithApp(app *less.App) *R.Client {
 		addr := dynamic.StringValue(dynamic.Get(config, "addr"), "127.0.0.1:6379")
 		password := dynamic.StringValue(dynamic.Get(config, "password"), "")
 		db := dynamic.IntValue(dynamic.Get(config, "db"), 0)
+		maxCount := dynamic.IntValue(dynamic.Get(config, "maxCount"), 10)
+		idle := dynamic.IntValue(dynamic.Get(config, "idle"), 0)
 
 		return R.NewClient(&R.Options{
-			Addr:     addr,
-			Password: password, // no password set
-			DB:       int(db),  // use default DB
+			Addr:        addr,
+			Password:    password, // no password set
+			DB:          int(db),  // use default DB
+			PoolSize:    int(maxCount),
+			IdleTimeout: time.Duration(idle) * time.Second,
 		}), nil
 	})
 	return v.(*R.Client)
