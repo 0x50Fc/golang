@@ -491,11 +491,15 @@ func (A *App) GetRedis(name string) (*redis.Client, string, error) {
 	addr := dynamic.StringValue(dynamic.Get(config, "addr"), "127.0.0.1:6379")
 	password := dynamic.StringValue(dynamic.Get(config, "password"), "")
 	db := dynamic.IntValue(dynamic.Get(config, "db"), 0)
+	maxCount := dynamic.IntValue(dynamic.Get(config, "maxCount"), 10)
+	idle := dynamic.IntValue(dynamic.Get(config, "idle"), 0)
 
 	conn := redis.NewClient(&redis.Options{
-		Addr:     addr,
-		Password: password, // no password set
-		DB:       int(db),  // use default DB
+		Addr:        addr,
+		Password:    password, // no password set
+		DB:          int(db),  // use default DB
+		IdleTimeout: time.Duration(idle) * time.Second,
+		PoolSize:    int(maxCount),
 	})
 
 	_, err := conn.Ping().Result()
