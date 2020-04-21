@@ -64,8 +64,10 @@ func init() {
 	ca.AppendCertsFromPEM(pemCerts)
 	client = &xhttp.Client{
 		Transport: &xhttp.Transport{
-			TLSClientConfig:   &tls.Config{RootCAs: ca},
-			DisableKeepAlives: false,
+			TLSClientConfig:     &tls.Config{RootCAs: ca},
+			DisableKeepAlives:   false,
+			IdleConnTimeout:     6 * time.Second,
+			MaxIdleConnsPerHost: 2000,
 		},
 	}
 }
@@ -77,9 +79,10 @@ func CA() *x509.CertPool {
 func NewClient() *xhttp.Client {
 	return &xhttp.Client{
 		Transport: &xhttp.Transport{
-			TLSClientConfig:   &tls.Config{RootCAs: ca},
-			DisableKeepAlives: false,
-			IdleConnTimeout:   6 * time.Second,
+			TLSClientConfig:     &tls.Config{RootCAs: ca},
+			DisableKeepAlives:   false,
+			IdleConnTimeout:     6 * time.Second,
+			MaxIdleConnsPerHost: 2000,
 		},
 	}
 }
