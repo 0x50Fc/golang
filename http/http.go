@@ -17,6 +17,7 @@ import (
 
 	"github.com/hailongz/golang/dynamic"
 	"github.com/hailongz/golang/json"
+	"golang.org/x/net/http2"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
 )
@@ -62,11 +63,13 @@ var client *xhttp.Client
 func init() {
 	ca = x509.NewCertPool()
 	ca.AppendCertsFromPEM(pemCerts)
+	trans := xhttp.Transport{
+		TLSClientConfig:   &tls.Config{RootCAs: ca},
+		DisableKeepAlives: false,
+	}
+	http2.ConfigureTransport(&trans)
 	client = &xhttp.Client{
-		Transport: &xhttp.Transport{
-			TLSClientConfig:   &tls.Config{RootCAs: ca},
-			DisableKeepAlives: false,
-		},
+		Transport: &trans,
 	}
 }
 
@@ -75,12 +78,14 @@ func CA() *x509.CertPool {
 }
 
 func NewClient() *xhttp.Client {
+	trans := xhttp.Transport{
+		TLSClientConfig:   &tls.Config{RootCAs: ca},
+		DisableKeepAlives: false,
+		IdleConnTimeout:   6 * time.Second,
+	}
+	http2.ConfigureTransport(&trans)
 	return &xhttp.Client{
-		Transport: &xhttp.Transport{
-			TLSClientConfig:   &tls.Config{RootCAs: ca},
-			DisableKeepAlives: false,
-			IdleConnTimeout:   6 * time.Second,
-		},
+		Transport: &trans,
 	}
 }
 

@@ -210,6 +210,10 @@ func (A *App) GetStore() IStore {
 	return A.store
 }
 
+func (A *App) QName() string {
+	return A.qname
+}
+
 func (A *App) GetSharedObject(key string, fn func() (SharedObject, error)) (SharedObject, error) {
 
 	A.lock.RLock()

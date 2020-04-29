@@ -4,7 +4,7 @@ type PutTask struct {
 	Name	interface{}	`json:"name,omitempty" name:"name" title:"配置名称"`
 	Key	string	`json:"key" name:"key" title:"Key"`
 	Type	interface{}	`json:"type,omitempty" name:"type" title:"类型 默认 url"`
-	Content	interface{}	`json:"content,omitempty" name:"content" title:"内容\n当 Type.Text || Type.Base64 时使用"`
+	Content	interface{}	`json:"content,omitempty" name:"content" title:"内容\n当 Type.Text || Type.Base64 时使用\n当 Type.URL 时 JSON.stringify({\n  \"url\":\"\",\n  \"header\":{}\n})"`
 	Expires	interface{}	`json:"expires,omitempty" name:"expires" title:"超时时间(秒) type == url 使用"`
 }
 

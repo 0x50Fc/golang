@@ -51,8 +51,29 @@ func NewAliSource(endpoint string, accessKey string, secretKey string, bucket st
 	return &AliSource{client: cli, bucket: buk, baseURL: baseURL, endpoint: endpoint, accessKey: accessKey, secretKey: secretKey}, nil
 }
 
-func (S *AliSource) Get(key string) ([]byte, error) {
-	rd, err := S.bucket.GetObject(key)
+func parseOptions(header map[string]string) []Ali.Option {
+	options := []Ali.Option{}
+	if header != nil {
+		for key, value := range header {
+			if key == "X-Oss-Process" {
+				options = append(options, Ali.Process(value))
+			} else if key == "Content-Type" {
+				options = append(options, Ali.ContentType(value))
+			} else if key == "Content-Encoding" {
+				options = append(options, Ali.ContentEncoding(value))
+			} else if key == "Content-Disposition" {
+				options = append(options, Ali.ContentDisposition(value))
+			} else {
+				options = append(options, Ali.Meta(key, value))
+			}
+		}
+	}
+	return options
+}
+
+func (S *AliSource) Get(key string, header map[string]string) ([]byte, error) {
+	options := parseOptions(header)
+	rd, err := S.bucket.GetObject(key, options...)
 	if err != nil {
 		return nil, err
 	}
@@ -64,8 +85,9 @@ func (S *AliSource) GetURL(key string) string {
 	return fmt.Sprintf("%s%s", S.baseURL, key)
 }
 
-func (S *AliSource) GetSignURL(key string, expires time.Duration) (string, error) {
-	u, err := S.bucket.SignURL(key, Ali.HTTPGet, int64(expires/time.Second))
+func (S *AliSource) GetSignURL(key string, expires time.Duration, header map[string]string) (string, error) {
+	options := parseOptions(header)
+	u, err := S.bucket.SignURL(key, Ali.HTTPGet, int64(expires/time.Second), options...)
 	if err != nil {
 		return "", err
 	}

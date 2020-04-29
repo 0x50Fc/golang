@@ -39,7 +39,7 @@ func NewMinioSource(endpoint string, accessKey string, secretKey string, bucket 
 	return &MinioSource{cli: cli, bucket: bucket, baseURL: baseURL}, nil
 }
 
-func (S *MinioSource) Get(key string) ([]byte, error) {
+func (S *MinioSource) Get(key string, header map[string]string) ([]byte, error) {
 	object, err := S.cli.GetObject(S.bucket, key, minio.GetObjectOptions{})
 	if err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func (S *MinioSource) GetURL(key string) string {
 	return fmt.Sprintf("%s/%s/%s", S.baseURL, S.bucket, key)
 }
 
-func (S *MinioSource) GetSignURL(key string, expires time.Duration) (string, error) {
+func (S *MinioSource) GetSignURL(key string, expires time.Duration, header map[string]string) (string, error) {
 	u, err := S.cli.PresignedGetObject(S.bucket, key, expires, nil)
 	if err != nil {
 		return "", err

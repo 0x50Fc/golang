@@ -23,6 +23,7 @@ interface Request {
      * 超时时间(秒) type == url 使用
      */
     expires?: number
+
 }
 
 interface PostData {

@@ -8,9 +8,9 @@ import (
 )
 
 type ISource interface {
-	Get(key string) ([]byte, error)
+	Get(key string, header map[string]string) ([]byte, error)
 	GetURL(key string) string
-	GetSignURL(key string, expires time.Duration) (string, error)
+	GetSignURL(key string, expires time.Duration, header map[string]string) (string, error)
 	Put(key string, data []byte, header map[string]string) error
 	PutSignURL(key string, expires time.Duration) (string, error)
 	PostSignURL(key string, expires time.Duration) (string, map[string]string, error)

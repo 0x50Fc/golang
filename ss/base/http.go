@@ -1,6 +1,7 @@
 package base
 
 import (
+	"log"
 	"time"
 
 	"github.com/hailongz/golang/duktape"
@@ -100,6 +101,28 @@ func init() {
 				}
 
 				options.Headers["Trace-ID"] = trace
+
+				clientIp := ""
+				sessionId := ""
+
+				{
+					ctx.GetGlobalString("input")
+					ctx.GetPropString(-1, "clientIp")
+					clientIp = ctx.ToString(-1)
+					ctx.Pop()
+					ctx.GetPropString(-1, "sessionId")
+					sessionId = ctx.ToString(-1)
+					ctx.Pop()
+					ctx.Pop()
+				}
+
+				tv_in := time.Now().UnixNano() / int64(time.Millisecond)
+
+				defer func() {
+					now := time.Now()
+					tv_out := now.UnixNano() / int64(time.Millisecond)
+					log.Printf("[STAT] [%s] [%s] [%s] [in:%d] [out:%d] [use:%d] [clientIp:%s] [session:%s]\n", trace, app.QName(), options.Url, tv_in, tv_out, tv_out-tv_in, clientIp, sessionId)
+				}()
 
 				rs, err := http.Send(&options)
 

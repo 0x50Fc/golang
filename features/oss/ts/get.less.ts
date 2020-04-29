@@ -28,6 +28,11 @@ interface Request {
      * 超时时间(秒) 公开读不设置
      */
     expires?: number
+
+    /**
+     * 头 JSON 格式
+     */
+    header?: string
 }
 
 interface Response extends BaseResponse {

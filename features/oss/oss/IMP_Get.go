@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/hailongz/golang/dynamic"
+	"github.com/hailongz/golang/json"
 	"github.com/hailongz/golang/micro"
 )
 
@@ -20,10 +21,21 @@ func (S *Service) Get(app micro.IContext, task *GetTask) (interface{}, error) {
 		return nil, err
 	}
 
+	header := map[string]string{}
+
+	if task.Header != nil {
+		var data interface{} = nil
+		json.Unmarshal([]byte(dynamic.StringValue(task.Header, "")), &data)
+		dynamic.Each(data, func(key interface{}, value interface{}) bool {
+			header[dynamic.StringValue(key, "")] = dynamic.StringValue(value, "")
+			return true
+		})
+	}
+
 	switch stype {
 	case Type_Text:
 		{
-			b, err := source.Get(task.Key)
+			b, err := source.Get(task.Key, header)
 			if err != nil {
 				return nil, err
 			}
@@ -31,7 +43,7 @@ func (S *Service) Get(app micro.IContext, task *GetTask) (interface{}, error) {
 		}
 	case Type_Base64:
 		{
-			b, err := source.Get(task.Key)
+			b, err := source.Get(task.Key, header)
 			if err != nil {
 				return nil, err
 			}
@@ -44,7 +56,7 @@ func (S *Service) Get(app micro.IContext, task *GetTask) (interface{}, error) {
 
 		} else {
 
-			u, err := source.GetSignURL(task.Key, time.Second*time.Duration(dynamic.IntValue(task.Expires, 0)))
+			u, err := source.GetSignURL(task.Key, time.Second*time.Duration(dynamic.IntValue(task.Expires, 0)), header)
 
 			if err != nil {
 				return nil, err
