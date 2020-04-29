@@ -63,14 +63,7 @@ var client *xhttp.Client
 func init() {
 	ca = x509.NewCertPool()
 	ca.AppendCertsFromPEM(pemCerts)
-	trans := xhttp.Transport{
-		TLSClientConfig:   &tls.Config{RootCAs: ca},
-		DisableKeepAlives: false,
-	}
-	http2.ConfigureTransport(&trans)
-	client = &xhttp.Client{
-		Transport: &trans,
-	}
+	client = NewClient()
 }
 
 func CA() *x509.CertPool {
@@ -79,9 +72,10 @@ func CA() *x509.CertPool {
 
 func NewClient() *xhttp.Client {
 	trans := xhttp.Transport{
-		TLSClientConfig:   &tls.Config{RootCAs: ca},
-		DisableKeepAlives: false,
-		IdleConnTimeout:   6 * time.Second,
+		TLSClientConfig:     &tls.Config{RootCAs: ca},
+		DisableKeepAlives:   false,
+		IdleConnTimeout:     6 * time.Second,
+		MaxIdleConnsPerHost: 2000,
 	}
 	http2.ConfigureTransport(&trans)
 	return &xhttp.Client{

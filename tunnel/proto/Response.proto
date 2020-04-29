@@ -1,0 +1,34 @@
+
+syntax = "proto3";
+
+package kk;
+
+message Response {
+	
+	/**
+	 * 请求ID
+	 */
+	int64 id = 1;
+	
+	/**
+	 * 状态码
+	 */
+	int32 code = 2;
+
+    /**
+	 * 数据类型
+	 */
+    string type = 3;		
+    
+	/**
+	 * 数据
+	 * @type {bytes}
+	 */
+	bytes data = 4;
+
+	/**
+	 * 头
+	 */
+	map<string,string> header = 5;
+
+}
