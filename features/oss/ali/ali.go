@@ -9,11 +9,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/url"
+	"strings"
 	"time"
 
+	"git.weixin.qq.com/proj/coinnews/srv/ms/oss/oss"
 	Ali "github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/hailongz/golang/dynamic"
-	"github.com/hailongz/golang/features/oss/oss"
 )
 
 func init() {
@@ -55,13 +56,14 @@ func parseOptions(header map[string]string) []Ali.Option {
 	options := []Ali.Option{}
 	if header != nil {
 		for key, value := range header {
-			if key == "X-Oss-Process" {
+			lkey := strings.ToLower(key)
+			if lkey == "x-oss-process" {
 				options = append(options, Ali.Process(value))
-			} else if key == "Content-Type" {
+			} else if key == "content-type" {
 				options = append(options, Ali.ContentType(value))
-			} else if key == "Content-Encoding" {
+			} else if key == "content-encoding" {
 				options = append(options, Ali.ContentEncoding(value))
-			} else if key == "Content-Disposition" {
+			} else if key == "content-disposition" {
 				options = append(options, Ali.ContentDisposition(value))
 			} else {
 				options = append(options, Ali.Meta(key, value))
@@ -91,26 +93,21 @@ func (S *AliSource) GetSignURL(key string, expires time.Duration, header map[str
 	if err != nil {
 		return "", err
 	}
+	if S.baseURL != "" {
+		i := strings.Index(u, "://")
+		if i > 0 {
+			j := strings.Index(u[i+3:], "/")
+			if j > 0 {
+				return S.baseURL + u[i+3+j+1:], nil
+			}
+		}
+	}
 	return u, nil
 }
 
 func (S *AliSource) Put(key string, data []byte, header map[string]string) error {
 
-	options := []Ali.Option{}
-
-	if header != nil {
-		for key, value := range header {
-			if key == "Content-Type" {
-				options = append(options, Ali.ContentType(value))
-			} else if key == "Content-Encoding" {
-				options = append(options, Ali.ContentEncoding(value))
-			} else if key == "Content-Disposition" {
-				options = append(options, Ali.ContentDisposition(value))
-			} else {
-				options = append(options, Ali.Meta(key, value))
-			}
-		}
-	}
+	options := parseOptions(header)
 
 	err := S.bucket.PutObject(key, bytes.NewReader(data), options...)
 
