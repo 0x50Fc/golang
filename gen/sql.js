@@ -11,7 +11,7 @@ const less = __importStar(require("./Less"));
 function escapeName(n) {
     return "`" + n + "`";
 }
-function tableField(fd, getEnum) {
+function tableField(fd, getEnum, jsonType) {
     let n = fd.name.toLocaleLowerCase();
     let type = "VARCHAR";
     let defaultValue = "''";
@@ -38,6 +38,12 @@ function tableField(fd, getEnum) {
             defaultValue = "0";
             break;
         case less.FieldType.OBJECT:
+            if (jsonType) {
+                type = 'JSON';
+                length = 0;
+                defaultValue = '{}';
+                break;
+            }
             if (length == -1) {
                 length = 0;
                 type = "TEXT";
@@ -154,7 +160,7 @@ function tableFieldSQL(field) {
     }
     return vs.join('');
 }
-function tableSQL(object, getEnum, name, sql, table) {
+function tableSQL(object, getEnum, name, sql, table, jsonType) {
     if (table === undefined || table.fields === undefined) {
         let autoIncrement;
         let vs = [];
@@ -175,7 +181,7 @@ function tableSQL(object, getEnum, name, sql, table) {
             if (fd.name == "id") {
                 continue;
             }
-            let field = tableField(fd, getEnum);
+            let field = tableField(fd, getEnum, jsonType);
             if (field.index != "") {
                 indexs.push(field);
             }
@@ -229,7 +235,7 @@ function tableSQL(object, getEnum, name, sql, table) {
             if (fd.name == "id") {
                 continue;
             }
-            let field = tableField(fd, getEnum);
+            let field = tableField(fd, getEnum, jsonType);
             let v_fd = table.fields[field.name];
             if (v_fd === undefined) {
                 vs.push("ALTER TABLE ");
@@ -285,7 +291,7 @@ function tableSQL(object, getEnum, name, sql, table) {
         sql(vs.join(''));
     }
 }
-function walk(basePath, prefix, sql, tableSet) {
+function walk(basePath, prefix, sql, tableSet, jsonType) {
     let r = {};
     less.walk(basePath, (v) => {
         let enumSet = {};
@@ -331,7 +337,7 @@ function walk(basePath, prefix, sql, tableSet) {
                     continue;
                 }
                 let n = fd.name.toLocaleLowerCase();
-                fields[n] = tableField(fd, getEnum);
+                fields[n] = tableField(fd, getEnum, jsonType);
             }
             r[name] = {
                 fields: fields,

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TAG=latest
-PROJECT=registry.cn-beijing.aliyuncs.com/coinnews/kk-wx
+PROJECT=registry.cn-beijing.aliyuncs.com/zkr/kk-like
 
 echo "[GO BUILD] [$PROJECT:$TAG] >>"
 docker run --rm -v `pwd`:/main:rw -v $GOPATH:/go:rw hailongz/kk-gobuild:latest go build
@@ -13,3 +13,4 @@ echo "[DOCKER PUSH] [$PROJECT:$TAG] >>"
 docker push $PROJECT:$TAG
 echo "[OK]"
 rm -rf main
+

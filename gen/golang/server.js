@@ -10,7 +10,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fs = __importStar(require("fs"));
 const path = __importStar(require("path"));
 const context_1 = require("./context");
-function walk(basePath, outDir) {
+function walk(basePath, outDir, jsonType = false) {
     console.info(basePath, ">>", outDir);
     if (!fs.existsSync(outDir)) {
         fs.mkdirSync(outDir);
@@ -114,7 +114,7 @@ function walk(basePath, outDir) {
                         continue;
                     }
                     vs.push("\t");
-                    vs.push(ctx.getFieldDecl(fd));
+                    vs.push(ctx.getFieldDecl(fd, jsonType));
                     vs.push("\n");
                 }
                 vs.push("}\n\n");

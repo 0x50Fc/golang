@@ -52,3 +52,7 @@ func (v *IID) NewID() int64 {
 
 	return ((id - twepoch) << tShift) | (v.aid << aidShift) | (v.nid << nidShift) | v.s
 }
+
+func GetTime(id int64) time.Duration {
+	return time.Duration(((id>>tShift)&0x7fffffffff)+twepoch) * time.Millisecond
+}

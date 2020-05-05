@@ -4,7 +4,7 @@ import * as path from "path"
 import { Context } from "./context";
 
 
-export function walk(basePath: string, outDir: string): void {
+export function walk(basePath: string, outDir: string, jsonType: boolean = false): void {
 
     console.info(basePath, ">>", outDir);
 
@@ -152,7 +152,7 @@ export function walk(basePath: string, outDir: string): void {
                         continue;
                     }
                     vs.push("\t");
-                    vs.push(ctx.getFieldDecl(fd));
+                    vs.push(ctx.getFieldDecl(fd,jsonType));
                     vs.push("\n");
                 }
 

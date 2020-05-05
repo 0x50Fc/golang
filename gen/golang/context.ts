@@ -317,7 +317,7 @@ export class Context {
         return "nil"
     }
 
-    getFieldDecl(fd: less.LessField): string {
+    getFieldDecl(fd: less.LessField, jsonType: boolean = false): string {
         let vs: string[] = [];
 
         vs.push(this.symbol(fd.name));
@@ -350,6 +350,9 @@ export class Context {
         if (fd.unique !== undefined) {
             vs.push(' unique:');
             vs.push(JSON.stringify(fd.unique));
+        }
+        if (jsonType && fd.type == less.FieldType.OBJECT) {
+            vs.push(' jsonType:"true"');
         }
         vs.push("`");
 

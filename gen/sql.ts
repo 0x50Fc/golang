@@ -31,7 +31,7 @@ function escapeName(n: string): string {
     return "`" + n + "`"
 }
 
-function tableField(fd: less.LessField, getEnum: (name: string) => less.LessEnum | undefined): TableField {
+function tableField(fd: less.LessField, getEnum: (name: string) => less.LessEnum | undefined, jsonType?: boolean): TableField {
     let n = fd.name.toLocaleLowerCase();
     let type = "VARCHAR";
     let defaultValue = "''";
@@ -58,6 +58,12 @@ function tableField(fd: less.LessField, getEnum: (name: string) => less.LessEnum
             defaultValue = "0";
             break;
         case less.FieldType.OBJECT:
+            if(jsonType) {
+                type = 'JSON'
+                length = 0
+                defaultValue = '{}'
+                break;
+            }
             if (length == -1) {
                 length = 0;
                 type = "TEXT";
@@ -167,7 +173,7 @@ interface EnumSet {
     [name: string]: less.LessEnum
 }
 
-function tableSQL(object: less.LessObject, getEnum: (name: string) => less.LessEnum | undefined, name: string, sql: (sql: string) => void, table?: Table): void {
+function tableSQL(object: less.LessObject, getEnum: (name: string) => less.LessEnum | undefined, name: string, sql: (sql: string) => void, table?: Table,jsonType?:boolean): void {
 
     if (table === undefined || table.fields === undefined) {
 
@@ -199,7 +205,7 @@ function tableSQL(object: less.LessObject, getEnum: (name: string) => less.LessE
                 continue
             }
 
-            let field = tableField(fd, getEnum)
+            let field = tableField(fd, getEnum,jsonType)
 
             if (field.index != "") {
                 indexs.push(field)
@@ -267,7 +273,7 @@ function tableSQL(object: less.LessObject, getEnum: (name: string) => less.LessE
                 continue
             }
 
-            let field = tableField(fd, getEnum)
+            let field = tableField(fd, getEnum,jsonType)
 
             let v_fd = table.fields[field.name];
 
@@ -330,7 +336,7 @@ function tableSQL(object: less.LessObject, getEnum: (name: string) => less.LessE
     }
 }
 
-export function walk(basePath: string, prefix: string, sql: (sql: string) => void, tableSet?: TableSet): TableSet {
+export function walk(basePath: string, prefix: string, sql: (sql: string) => void, tableSet?: TableSet, jsonType?: boolean): TableSet {
 
     let r: TableSet = {}
 
@@ -390,7 +396,7 @@ export function walk(basePath: string, prefix: string, sql: (sql: string) => voi
                     continue
                 }
                 let n = fd.name.toLocaleLowerCase();
-                fields[n] = tableField(fd, getEnum)
+                fields[n] = tableField(fd, getEnum,jsonType)
             }
 
             r[name] = {

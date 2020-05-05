@@ -280,7 +280,7 @@ class Context {
         }
         return "nil";
     }
-    getFieldDecl(fd) {
+    getFieldDecl(fd, jsonType = false) {
         let vs = [];
         vs.push(this.symbol(fd.name));
         vs.push("\t");
@@ -314,6 +314,9 @@ class Context {
         if (fd.unique !== undefined) {
             vs.push(' unique:');
             vs.push(JSON.stringify(fd.unique));
+        }
+        if (jsonType && fd.type == less.FieldType.OBJECT) {
+            vs.push(' jsonType:"true"');
         }
         vs.push("`");
         return vs.join('');

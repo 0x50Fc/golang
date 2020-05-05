@@ -94,8 +94,9 @@ commander
     .command('golang <inDir> <outDir>')
     .description('quick generate golang ')
     .usage("golang <inDir> <outDir>")
-    .action(function (inDir, outDir) {
-    golangServer.walk(inDir, outDir);
+    .option('--jsonType', 'MySQL 5.7  JSON TYPE')
+    .action(function (inDir, outDir, cmd) {
+    golangServer.walk(inDir, outDir, cmd.jsonType);
 });
 commander
     .command('golang-cli <inDir> <outDir>')
@@ -122,7 +123,7 @@ commander
     let vs = [];
     let tableSet = sql.walk(inDir, config.prefix || '', (v) => {
         vs.push(v);
-    }, config.tableSet);
+    }, config.tableSet, config.jsonType);
     fs.writeFileSync(dest + ".sql", vs.join(''), { encoding: 'utf-8' });
     fs.writeFileSync(dest + '.json', JSON.stringify({
         prefix: config.prefix || '',

@@ -1,0 +1,39 @@
+{
+    "title": "在看服务",
+    "name": "kk-lookin",
+    "errno": 1100000,
+    "lookin": {
+        "maxLevel": 2
+    },
+    "table": {
+        "count": 16
+    },
+    "db": {
+        "prefix": "lookin_",
+        "rd": {
+            "title": "读数据库",
+            "name": "mysql",
+            "url": "root:1qaz2wsx@tcp(10.210.237.104)/kk?charset=utf8",
+            "maxIdleConns": 1,
+            "maxOpenConns": 6
+        },
+        "wd": {
+            "title": "写数据库",
+            "name": "mysql",
+            "url": "root:1qaz2wsx@tcp(10.210.237.104)/kk?charset=utf8",
+            "maxIdleConns": 1,
+            "maxOpenConns": 6
+        }
+    },
+    "redis": {
+        "prefix": "lookin_",
+        "default": {
+            "addr": "127.0.0.1:6379",
+            "password": "",
+            "db": 0
+        }
+    },
+    "httpd": {
+        "addr": ":8080"
+    }
+}

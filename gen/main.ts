@@ -100,8 +100,9 @@ commander
     .command('golang <inDir> <outDir>')
     .description('quick generate golang ')
     .usage("golang <inDir> <outDir>")
-    .action(function (inDir: string, outDir: string) {
-        golangServer.walk(inDir, outDir);
+    .option('--jsonType', 'MySQL 5.7  JSON TYPE')
+    .action(function (inDir: string, outDir: string, cmd: any) {
+        golangServer.walk(inDir, outDir, cmd.jsonType);
     });
 
 commander
@@ -130,7 +131,7 @@ commander
         let vs: string[] = [];
         let tableSet = sql.walk(inDir, config.prefix || '', (v: string): void => {
             vs.push(v);
-        }, config.tableSet);
+        }, config.tableSet, config.jsonType);
         fs.writeFileSync(dest + ".sql", vs.join(''), { encoding: 'utf-8' });
         fs.writeFileSync(dest + '.json', JSON.stringify({
             prefix: config.prefix || '',
