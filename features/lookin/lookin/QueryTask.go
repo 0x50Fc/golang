@@ -6,6 +6,7 @@ type QueryTask struct {
 	Uid	interface{}	`json:"uid,omitempty" name:"uid" title:"用户ID"`
 	Fuid	interface{}	`json:"fuid,omitempty" name:"fuid" title:"用户ID"`
 	Flevel	interface{}	`json:"flevel,omitempty" name:"flevel" title:"好友级别，多个逗号分割"`
+	GroupBy	interface{}	`json:"groupBy,omitempty" name:"groupby" title:"分组"`
 	P	interface{}	`json:"p,omitempty" name:"p" title:"分页位置, 从1开始, 0 不处理分页"`
 	N	interface{}	`json:"n,omitempty" name:"n" title:"分页大小，默认 20"`
 }

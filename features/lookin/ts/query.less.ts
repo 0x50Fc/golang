@@ -1,7 +1,7 @@
 
 import { BaseResponse, ErrCode } from "./lib/BaseResponse"
 import { int64, int32 } from "./lib/less";
-import { Lookin } from "./Lookin";
+import { Lookin, GroupBy } from "./Lookin";
 
 /**
  * 查询
@@ -33,6 +33,11 @@ export interface Request {
      * 好友级别，多个逗号分割
      */
     flevel?: string
+    
+    /**
+     * 分组
+     */
+    groupBy?: GroupBy
     
     /**
      * 分页位置, 从1开始, 0 不处理分页

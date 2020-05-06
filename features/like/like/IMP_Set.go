@@ -24,73 +24,50 @@ func (S *Service) Set(app micro.IContext, task *SetTask) (*Like, error) {
 
 	iid := dynamic.IntValue(task.Iid, 0)
 
-	isAdd := false
+	p, err := db.Get(conn, &like, prefix, "WHERE tid = ? and uid = ? AND iid=?", task.Tid, task.Uid, iid)
 
-	err = db.Transaction(conn, func(conn db.Database) error {
+	if err != nil {
+		return nil, err
+	}
 
-		rs, err := db.Query(conn, &like, prefix, " WHERE tid = ? AND uid = ? AND iid=? ", task.Tid, task.Uid, iid)
+	if like.Id == 0 {
+		like.Tid = task.Tid
+		like.Iid = iid
+		like.Uid = task.Uid
+		like.Ctime = time.Now().Unix()
+	}
 
-		if err != nil {
-			return err
-		}
+	keys := map[string]bool{}
 
-		if rs.Next() {
-			scaner := db.NewScaner(&like)
-			err = scaner.Scan(rs)
-		}
+	if task.Options != nil {
 
-		rs.Close()
+		options := map[string]interface{}{}
 
-		if err != nil {
-			return err
-		}
+		dynamic.Each(like.Options, func(key interface{}, value interface{}) bool {
+			options[dynamic.StringValue(key, "")] = value
+			return true
+		})
 
-		if like.Id == 0 {
-			like.Tid = task.Tid
-			like.Iid = iid
-			like.Uid = task.Uid
-			like.Ctime = time.Now().Unix()
-		}
+		text := dynamic.StringValue(task.Options, "")
 
-		keys := map[string]bool{}
+		var data interface{} = nil
 
-		if task.Options != nil {
+		json.Unmarshal([]byte(text), &data)
 
-			options := map[string]interface{}{}
+		dynamic.Each(data, func(key interface{}, value interface{}) bool {
+			options[dynamic.StringValue(key, "")] = value
+			return true
+		})
 
-			dynamic.Each(like.Options, func(key interface{}, value interface{}) bool {
-				options[dynamic.StringValue(key, "")] = value
-				return true
-			})
+		like.Options = options
+		keys["options"] = true
+	}
 
-			text := dynamic.StringValue(task.Options, "")
-
-			var data interface{} = nil
-
-			json.Unmarshal([]byte(text), &data)
-
-			dynamic.Each(data, func(key interface{}, value interface{}) bool {
-				options[dynamic.StringValue(key, "")] = value
-				return true
-			})
-
-			like.Options = options
-			keys["options"] = true
-		}
-
-		if like.Id == 0 {
-			isAdd = true
-			_, err = db.Insert(conn, &like, prefix)
-		} else if len(keys) > 0 {
-			_, err = db.UpdateWithKeys(conn, &like, prefix, keys)
-		}
-
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
+	if like.Id == 0 {
+		_, err = db.Insert(conn, &like, prefix)
+	} else if len(keys) > 0 {
+		_, err = db.UpdateWithKeys(conn, &like, prefix, keys)
+	}
 
 	if err != nil {
 		return nil, err
@@ -107,7 +84,7 @@ func (S *Service) Set(app micro.IContext, task *SetTask) (*Like, error) {
 		}
 	}
 
-	if isAdd {
+	if p == nil {
 		// MQ 消息
 		app.SendMessage(task.GetName(), &like)
 	}

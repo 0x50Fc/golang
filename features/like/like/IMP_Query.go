@@ -56,6 +56,9 @@ func (S *Service) Query(app micro.IContext, task *QueryTask) (*QueryData, error)
 		countTask := CountTask{}
 
 		countTask.Tid = task.Tid
+		countTask.Iid = task.Iid
+		countTask.Maxtime = task.Maxtime
+		countTask.Mintime = task.Mintime
 
 		countData, err := S.Count(app, &countTask)
 

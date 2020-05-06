@@ -1,6 +1,7 @@
 
 import { BaseResponse, ErrCode } from "./lib/BaseResponse"
 import { int64, int32 } from "./lib/less";
+import { GroupBy } from "./Lookin";
 
 /**
  * 数量
@@ -32,7 +33,12 @@ export interface Request {
      * 好友级别，多个逗号分割
      */
     flevel?: string
-    
+
+    /**
+     * 分组
+     */
+    groupBy?: GroupBy
+
 }
 
 

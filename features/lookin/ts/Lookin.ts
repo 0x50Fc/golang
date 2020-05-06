@@ -1,4 +1,10 @@
-import { int64 } from "./lib/less";
+import { int64, int32 } from "./lib/less";
+
+export enum GroupBy {
+    none = "none",
+    uid = "uid",
+    fuid = "fuid"
+}
 
 /**
  * 在看
@@ -44,7 +50,7 @@ export class Lookin {
      * 关系级别
      * @index ASC
      */
-    flevel: int64 = 0
+    flevel: int32 = 0
 
     /**
      * 其他数据
