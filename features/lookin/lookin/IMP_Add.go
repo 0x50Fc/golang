@@ -12,8 +12,6 @@ import (
 
 func (S *Service) Add(app micro.IContext, task *AddTask) (*AddData, error) {
 
-	maxLevel := int(dynamic.IntValue(dynamic.GetWithKeys(app.GetConfig(), []string{"lookin", "maxLevel"}), 3))
-
 	conn, prefix, err := app.GetDB("wd")
 
 	if err != nil {
@@ -26,11 +24,9 @@ func (S *Service) Add(app micro.IContext, task *AddTask) (*AddData, error) {
 
 	items := []*Lookin{&Lookin{Fuid: task.Uid, Flevel: 0}}
 
-	var iids []int64
-
 	fcode := dynamic.StringValue(task.Fcode, "")
 
-	if task.Fcode == nil {
+	if task.Fcode != nil {
 		ids, err := DeocdeString(fcode)
 		if err != nil {
 			return nil, err
@@ -41,14 +37,8 @@ func (S *Service) Add(app micro.IContext, task *AddTask) (*AddData, error) {
 				items = append(items, &Lookin{Fuid: dynamic.IntValue(task.Fuid, 0), Flevel: int32(n - i)})
 			}
 		}
-		iids = append(ids, task.Uid)
-		n += 1
-		if n > maxLevel {
-			iids = iids[n-maxLevel:]
-		}
-	} else if task.Fuid == nil {
+	} else if task.Fuid != nil {
 		items = append(items, &Lookin{Fuid: dynamic.IntValue(task.Fuid, 0), Flevel: 1})
-		iids = []int64{task.Uid}
 	}
 
 	v := Lookin{}
@@ -63,7 +53,9 @@ func (S *Service) Add(app micro.IContext, task *AddTask) (*AddData, error) {
 			item.Iid = iid
 			item.Uid = task.Uid
 			item.Fcode = fcode
-			item.Options = task.Options
+			if task.Options != nil {
+				json.Unmarshal([]byte(dynamic.StringValue(task.Options, "")), &task.Options)
+			}
 			item.Ctime = time.Now().Unix()
 			_, err = db.Insert(conn, item, prefix)
 			if err != nil {
@@ -72,32 +64,19 @@ func (S *Service) Add(app micro.IContext, task *AddTask) (*AddData, error) {
 		} else if v.Flevel < item.Flevel {
 			*item = v
 		} else {
+
 			v.Flevel = item.Flevel
 			v.Fuid = item.Fuid
 			v.Fcode = fcode
 
+			*item = v
+
 			keys := map[string]bool{"flevel": true, "fuid": true, "fcode": true}
 
 			if task.Options != nil {
-
-				options := map[string]interface{}{}
-
-				dynamic.Each(v.Options, func(key interface{}, value interface{}) bool {
-					options[dynamic.StringValue(key, "")] = value
-					return true
-				})
-
-				text := dynamic.StringValue(task.Options, "")
-
-				var data interface{} = nil
-
-				json.Unmarshal([]byte(text), &data)
-
-				dynamic.Each(data, func(key interface{}, value interface{}) bool {
-					options[dynamic.StringValue(key, "")] = value
-					return true
-				})
-
+				var options interface{} = nil
+				json.Unmarshal([]byte(dynamic.StringValue(task.Options, "")), &options)
+				item.Options = db.Merge(v.Options, options)
 				v.Options = options
 				keys["options"] = true
 			}
@@ -108,7 +87,6 @@ func (S *Service) Add(app micro.IContext, task *AddTask) (*AddData, error) {
 				return nil, err
 			}
 
-			*item = v
 		}
 	}
 
@@ -123,7 +101,7 @@ func (S *Service) Add(app micro.IContext, task *AddTask) (*AddData, error) {
 		}
 	}
 
-	data := AddData{Code: EncodeToString(iids), Items: items}
+	data := AddData{Items: items}
 
 	app.SendMessage(task.GetName(), &data)
 

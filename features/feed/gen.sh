@@ -1,6 +1,6 @@
 #!/bin/sh
 
-NAME=adv
+NAME=feed
 
 node ../../gen/main.js golang ./ts ./$NAME
 

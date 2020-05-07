@@ -13,14 +13,14 @@
         "rd": {
             "title": "读数据库",
             "name": "mysql",
-            "url": "root:1qaz2wsx@tcp(10.210.237.104)/kk?charset=utf8",
+            "url": "root:123456@tcp(127.0.0.1)/kk?charset=utf8mb4&sql_mode=ANSI",
             "maxIdleConns": 1,
             "maxOpenConns": 6
         },
         "wd": {
             "title": "写数据库",
             "name": "mysql",
-            "url": "root:1qaz2wsx@tcp(10.210.237.104)/kk?charset=utf8",
+            "url": "root:123456@tcp(127.0.0.1)/kk?charset=utf8mb4&sql_mode=ANSI",
             "maxIdleConns": 1,
             "maxOpenConns": 6
         }

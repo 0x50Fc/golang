@@ -41,7 +41,7 @@ function tableField(fd, getEnum, jsonType) {
             if (jsonType) {
                 type = 'JSON';
                 length = 0;
-                defaultValue = '{}';
+                defaultValue = 'NULL';
                 break;
             }
             if (length == -1) {
@@ -320,16 +320,16 @@ function walk(basePath, prefix, sql, tableSet, jsonType) {
             var table = tableSet === undefined ? undefined : tableSet[name];
             if (table && table.count !== undefined && table.count > 0) {
                 for (var i = 1; i <= table.count; i++) {
-                    tableSQL(object, getEnum, prefix + i + '_' + name, sql, table);
+                    tableSQL(object, getEnum, prefix + i + '_' + name, sql, table, jsonType);
                 }
             }
             else if (table && table.name !== undefined && table.name.length > 0) {
                 for (let n of table.name) {
-                    tableSQL(object, getEnum, prefix + n + '_' + name, sql, table);
+                    tableSQL(object, getEnum, prefix + n + '_' + name, sql, table, jsonType);
                 }
             }
             else {
-                tableSQL(object, getEnum, prefix + name, sql, table);
+                tableSQL(object, getEnum, prefix + name, sql, table, jsonType);
             }
             let fields = {};
             for (let fd of object.fields) {

@@ -1,0 +1,107 @@
+{
+    "prefix": "article_",
+    "tableSet": {
+        "article": {
+            "fields": {
+                "uid": {
+                    "title": "发布者ID",
+                    "name": "uid",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                },
+                "body": {
+                    "title": "内容",
+                    "name": "body",
+                    "type": "TEXT",
+                    "default": "",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                },
+                "options": {
+                    "title": "其他数据",
+                    "name": "options",
+                    "type": "JSON",
+                    "default": "NULL",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                },
+                "ctime": {
+                    "title": "创建时间",
+                    "name": "ctime",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                },
+                "state": {
+                    "title": "状态",
+                    "name": "state",
+                    "type": "TINYINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "ASC",
+                    "unique": ""
+                }
+            },
+            "autoIncrement": 1000,
+            "count": 16
+        },
+        "outbox": {
+            "fields": {
+                "uid": {
+                    "title": "发布者ID",
+                    "name": "uid",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                },
+                "mid": {
+                    "title": "动态ID",
+                    "name": "mid",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                },
+                "body": {
+                    "title": "内容",
+                    "name": "body",
+                    "type": "TEXT",
+                    "default": "",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                },
+                "options": {
+                    "title": "其他数据",
+                    "name": "options",
+                    "type": "JSON",
+                    "default": "NULL",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                },
+                "ctime": {
+                    "title": "创建时间",
+                    "name": "ctime",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                }
+            },
+            "autoIncrement": 1,
+            "count": 16
+        }
+    }
+}

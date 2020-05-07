@@ -58,10 +58,10 @@ function tableField(fd: less.LessField, getEnum: (name: string) => less.LessEnum
             defaultValue = "0";
             break;
         case less.FieldType.OBJECT:
-            if(jsonType) {
+            if (jsonType) {
                 type = 'JSON'
                 length = 0
-                defaultValue = '{}'
+                defaultValue = 'NULL'
                 break;
             }
             if (length == -1) {
@@ -173,7 +173,7 @@ interface EnumSet {
     [name: string]: less.LessEnum
 }
 
-function tableSQL(object: less.LessObject, getEnum: (name: string) => less.LessEnum | undefined, name: string, sql: (sql: string) => void, table?: Table,jsonType?:boolean): void {
+function tableSQL(object: less.LessObject, getEnum: (name: string) => less.LessEnum | undefined, name: string, sql: (sql: string) => void, table?: Table, jsonType?: boolean): void {
 
     if (table === undefined || table.fields === undefined) {
 
@@ -205,7 +205,7 @@ function tableSQL(object: less.LessObject, getEnum: (name: string) => less.LessE
                 continue
             }
 
-            let field = tableField(fd, getEnum,jsonType)
+            let field = tableField(fd, getEnum, jsonType)
 
             if (field.index != "") {
                 indexs.push(field)
@@ -273,7 +273,7 @@ function tableSQL(object: less.LessObject, getEnum: (name: string) => less.LessE
                 continue
             }
 
-            let field = tableField(fd, getEnum,jsonType)
+            let field = tableField(fd, getEnum, jsonType)
 
             let v_fd = table.fields[field.name];
 
@@ -379,14 +379,14 @@ export function walk(basePath: string, prefix: string, sql: (sql: string) => voi
 
             if (table && table.count !== undefined && table.count > 0) {
                 for (var i = 1; i <= table.count; i++) {
-                    tableSQL(object, getEnum, prefix + i + '_' + name, sql, table)
+                    tableSQL(object, getEnum, prefix + i + '_' + name, sql, table, jsonType)
                 }
             } else if (table && table.name !== undefined && table.name.length > 0) {
                 for (let n of table.name) {
-                    tableSQL(object, getEnum, prefix + n + '_' + name, sql, table)
+                    tableSQL(object, getEnum, prefix + n + '_' + name, sql, table, jsonType)
                 }
             } else {
-                tableSQL(object, getEnum, prefix + name, sql, table)
+                tableSQL(object, getEnum, prefix + name, sql, table, jsonType)
             }
 
             let fields: TableFieldSet = {};
@@ -396,7 +396,7 @@ export function walk(basePath: string, prefix: string, sql: (sql: string) => voi
                     continue
                 }
                 let n = fd.name.toLocaleLowerCase();
-                fields[n] = tableField(fd, getEnum,jsonType)
+                fields[n] = tableField(fd, getEnum, jsonType)
             }
 
             r[name] = {

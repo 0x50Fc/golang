@@ -1,0 +1,10 @@
+{
+    "prefix": "lookin_",
+    "tableSet": {
+        "lookin": {
+            "count": 16,
+            "autoIncrement": 1
+        }
+    },
+    "jsonType": true
+}

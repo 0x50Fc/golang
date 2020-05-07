@@ -1,0 +1,64 @@
+{
+    "prefix": "member_",
+    "tableSet": {
+        "member": {
+            "fields": {
+                "bid": {
+                    "title": "\b\b商户ID",
+                    "name": "bid",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "ASC",
+                    "unique": ""
+                },
+                "uid": {
+                    "title": "成员ID",
+                    "name": "uid",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "ASC",
+                    "unique": ""
+                },
+                "title": {
+                    "title": "备注名",
+                    "name": "title",
+                    "type": "VARCHAR",
+                    "default": "''",
+                    "length": 255,
+                    "index": "",
+                    "unique": ""
+                },
+                "keyword": {
+                    "title": "搜索关键字",
+                    "name": "keyword",
+                    "type": "VARCHAR",
+                    "default": "''",
+                    "length": 2048,
+                    "index": "",
+                    "unique": ""
+                },
+                "options": {
+                    "title": "其他数据",
+                    "name": "options",
+                    "type": "JSON",
+                    "default": "NULL",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                },
+                "ctime": {
+                    "title": "创建时间",
+                    "name": "ctime",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                }
+            },
+            "autoIncrement": 1
+        }
+    }
+}

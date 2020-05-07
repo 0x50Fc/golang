@@ -42,7 +42,6 @@ interface Request {
 }
 
 interface AddData {
-    code: string
     items: Lookin[]
 }
 

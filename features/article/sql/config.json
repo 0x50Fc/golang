@@ -1,0 +1,14 @@
+{
+    "prefix": "article_",
+    "tableSet": {
+        "article": {
+            "count": 16,
+            "autoIncrement": 1000
+        },
+        "outbox": {
+            "count": 16,
+            "autoIncrement": 1
+        }
+    },
+    "jsonType": true
+}

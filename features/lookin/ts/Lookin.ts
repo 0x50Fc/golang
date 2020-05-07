@@ -43,6 +43,7 @@ export class Lookin {
 
     /**
      * 好友推荐码
+     * @length 255
      */
     fcode: string = ""
 

@@ -29,10 +29,11 @@ type Object struct {
 }
 
 type Field struct {
-	F        reflect.StructField `json:"-"`
-	V        reflect.Value       `json:"-"`
-	Name     string              `json:"name"`
-	IsObject bool                `json:"-"`
+	F            reflect.StructField `json:"-"`
+	V            reflect.Value       `json:"-"`
+	Name         string              `json:"name"`
+	IsObject     bool                `json:"-"`
+	IsJSONObject bool                `json:"-"`
 }
 
 func (O *Object) GetTitle() string {
@@ -429,12 +430,19 @@ func UpdateWithKeys(db Database, object IObject, prefix string, keys map[string]
 			if n != 0 {
 				s.WriteString(",")
 			}
-			s.WriteString(fmt.Sprintf(" `%s`=?", field.Name))
-			if field.IsObject {
+			if field.IsJSONObject && field.IsObject {
+				s.WriteString(fmt.Sprintf(" `%s`=JSON_MERGE_PATCH(`%s`,?)", field.Name, field.Name))
 				b, _ := json.Marshal(field.V.Interface())
 				fs = append(fs, string(b))
 			} else {
-				fs = append(fs, field.V.Interface())
+				s.WriteString(fmt.Sprintf(" `%s`=?", field.Name))
+				if field.IsObject {
+					b, _ := json.Marshal(field.V.Interface())
+					fs = append(fs, string(b))
+				} else {
+					fs = append(fs, field.V.Interface())
+				}
+
 			}
 			n += 1
 		}
@@ -446,9 +454,7 @@ func UpdateWithKeys(db Database, object IObject, prefix string, keys map[string]
 
 	fs = append(fs, object.GetId())
 
-	n += 1
-
-	// log.Printf("%s %s\n", s.String(), fs)
+	// log.Printf("[SQL] %s %s\n", s.String(), fs)
 
 	return db.Exec(s.String(), fs...)
 }

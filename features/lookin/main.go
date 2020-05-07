@@ -10,23 +10,13 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/hailongz/golang/dynamic"
-	lookin "github.com/hailongz/golang/features/lookin/lookin"
+	_ "github.com/hailongz/golang/features/lookin/lookin"
 	"github.com/hailongz/golang/micro"
 	"github.com/hailongz/golang/stat"
 	"github.com/hailongz/golang/svc"
 )
 
 func main() {
-
-	{
-		ids := []int64{2131, 12, 33213123, 41, 5, 3126}
-
-		s := lookin.EncodeToString(ids)
-
-		dec, err := lookin.DeocdeString(s)
-
-		log.Println(s, dec, err)
-	}
 
 	s := svc.New()
 

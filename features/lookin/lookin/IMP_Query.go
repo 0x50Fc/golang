@@ -97,6 +97,16 @@ func (S *Service) Query(app micro.IContext, task *QueryTask) (*QueryData, error)
 
 	v := Lookin{}
 
+	if task.GroupBy == GroupBy_uid {
+		sql.WriteString("SELECT MIN(id) as id,ANY_VALUE(tid) as tid,ANY_VALUE(iid) as iid,uid,ANY_VALUE(fuid) as fuid,MIN(flevel) as flevel,ANY_VALUE(options) as opitons,ANY_VALUE(fcode) as fcode,MIN(ctime) as ctime")
+	} else if task.GroupBy == GroupBy_fuid {
+		sql.WriteString("SELECT MIN(id) as id,ANY_VALUE(tid) as tid,ANY_VALUE(iid) as iid,fuid,ANY_VALUE(uid) as uid,MIN(flevel) as flevel,ANY_VALUE(options) as opitons,ANY_VALUE(fcode) as fcode,MIN(ctime) as ctime")
+	} else {
+		sql.WriteString("SELECT *")
+	}
+
+	sql.WriteString(fmt.Sprintf(" FROM %s%s", prefix, v.GetName()))
+
 	sql.WriteString(" WHERE tid=? AND iid=?")
 
 	args = append(args, task.Tid, iid)
@@ -125,16 +135,18 @@ func (S *Service) Query(app micro.IContext, task *QueryTask) (*QueryData, error)
 	}
 
 	if task.GroupBy == GroupBy_uid {
-		sql.WriteString(" GROUP BY uid")
+		sql.WriteString(" GROUP BY uid ORDER BY MIN(flevel) ASC,MIN(id) ASC")
 	} else if task.GroupBy == GroupBy_fuid {
-		sql.WriteString(" GROUP BY fuid")
+		sql.WriteString(" GROUP BY fuid ORDER BY MIN(flevel) ASC,MIN(id) ASC")
+	} else {
+		sql.WriteString(fmt.Sprintf(" ORDER BY flevel ASC, id ASC LIMIT %d,%d", (p-1)*n, n))
 	}
-
-	sql.WriteString(fmt.Sprintf(" ORDER BY flevel DESC, id DESC LIMIT %d,%d", (p-1)*n, n))
 
 	data.Items = []*Lookin{}
 
-	rs, err := db.Query(conn, &v, prefix, sql.String(), args...)
+	app.Println("[SQL]", sql.String())
+
+	rs, err := conn.Query(sql.String(), args...)
 
 	if err != nil {
 		return nil, err

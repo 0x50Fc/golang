@@ -44,6 +44,8 @@ func each(v reflect.Value, keys map[string]bool, fn func(field Field) bool) bool
 			continue
 		}
 
+		fd.IsJSONObject = fd.F.Tag.Get("jsonType") == "true"
+
 		keys[fd.Name] = true
 
 		switch fd.F.Type.Kind() {

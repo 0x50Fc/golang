@@ -1,0 +1,9 @@
+{
+    "prefix": "member_",
+    "tableSet": {
+        "member": {
+            "autoIncrement": 1
+        }
+    },
+    "jsonType": true
+}

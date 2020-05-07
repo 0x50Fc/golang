@@ -1,0 +1,83 @@
+{
+    "prefix": "lookin_",
+    "tableSet": {
+        "lookin": {
+            "fields": {
+                "tid": {
+                    "title": "目标ID",
+                    "name": "tid",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "ASC",
+                    "unique": ""
+                },
+                "iid": {
+                    "title": "项ID",
+                    "name": "iid",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "ASC",
+                    "unique": ""
+                },
+                "uid": {
+                    "title": "用户ID",
+                    "name": "uid",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "ASC",
+                    "unique": ""
+                },
+                "fuid": {
+                    "title": "好友ID",
+                    "name": "fuid",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "ASC",
+                    "unique": ""
+                },
+                "fcode": {
+                    "title": "好友推荐码",
+                    "name": "fcode",
+                    "type": "VARCHAR",
+                    "default": "''",
+                    "length": 64,
+                    "index": "",
+                    "unique": ""
+                },
+                "flevel": {
+                    "title": "关系级别",
+                    "name": "flevel",
+                    "type": "INT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "ASC",
+                    "unique": ""
+                },
+                "options": {
+                    "title": "其他数据",
+                    "name": "options",
+                    "type": "JSON",
+                    "default": "NULL",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                },
+                "ctime": {
+                    "title": "创建时间",
+                    "name": "ctime",
+                    "type": "BIGINT",
+                    "default": "0",
+                    "length": 0,
+                    "index": "",
+                    "unique": ""
+                }
+            },
+            "autoIncrement": 1,
+            "count": 16
+        }
+    }
+}
