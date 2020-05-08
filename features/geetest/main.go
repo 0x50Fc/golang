@@ -9,10 +9,10 @@ import (
 	"time"
 
 	"github.com/hailongz/golang/dynamic"
+	_ "github.com/hailongz/golang/features/geetest/geetest"
 	"github.com/hailongz/golang/micro"
 	"github.com/hailongz/golang/stat"
 	"github.com/hailongz/golang/svc"
-	_ "github.com/hailongz/pj_bitcoin/srv/ms/geetest/geetest"
 )
 
 func main() {

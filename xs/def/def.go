@@ -11,6 +11,7 @@ type IRecycle interface {
 }
 
 type IService interface {
+	IRecycle
 	Type() string
 }
 
@@ -19,7 +20,7 @@ type IHTTPService interface {
 	HandleFunc(pattern string, handler func(resp http.ResponseWriter, req *http.Request), recycle IRecycle)
 }
 
-type In = func(config interface{}, s ...IService)
+type In = func(config interface{}, s ...IService) error
 
 func GetService(stype string, s ...IService) IService {
 	if s != nil {

@@ -1,0 +1,8 @@
+{
+    "dylib":"id-1.1-local.so",
+    "title": "ID服务",
+    "name": "kk-id",
+    "errno": 4000000,
+    "aid": 0,
+    "nid": 0
+}

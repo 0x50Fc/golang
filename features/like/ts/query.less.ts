@@ -34,15 +34,6 @@ export interface Request {
      */
     n?: int32
 
-    /**
-     * 最大时间
-     */
-    maxtime?: string
-
-    /**
-     * 最小时间
-     */
-    mintime?: string
 
 }
 

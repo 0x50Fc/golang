@@ -9,6 +9,7 @@ import (
 )
 
 type Client interface {
+	Recycle()
 	Send(method string, name string, data interface{}) (interface{}, error)
 }
 
@@ -18,6 +19,10 @@ type HTTPClient struct {
 
 func NewHttpClient(baseURL string) *HTTPClient {
 	return &HTTPClient{baseURL: baseURL}
+}
+
+func (C *HTTPClient) Recycle() {
+
 }
 
 func (C *HTTPClient) Send(method string, name string, data interface{}) (interface{}, error) {

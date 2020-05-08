@@ -23,6 +23,10 @@ import (
 	"gopkg.in/redis.v5"
 )
 
+type Recycle interface {
+	Recycle()
+}
+
 type SharedObject interface {
 }
 
@@ -133,6 +137,30 @@ type App struct {
 	stat          stat.Client
 	id            *iid.IID
 	qname         string
+}
+
+func (A *App) Recycle() {
+	A.lock.Lock()
+	defer A.lock.Unlock()
+	for _, s := range A.sharedObjects {
+		r, ok := s.(Recycle)
+		if ok && r != nil {
+			r.Recycle()
+		}
+	}
+	A.sharedObjects = nil
+	for _, s := range A.conns {
+		s.conn.Close()
+	}
+	A.conns = nil
+	for _, s := range A.redisConns {
+		s.conn.Close()
+	}
+	A.redisConns = nil
+	if A.q != nil {
+		A.q.Close()
+		A.q = nil
+	}
 }
 
 func NewApp(name string, errno int, config interface{}, ss []Service) (*App, error) {
@@ -335,6 +363,10 @@ func NewAppWithConfigFile(configFile string) (*App, error) {
 	return NewApp(dynamic.StringValue(dynamic.Get(config, "name"), "app"), int(dynamic.IntValue(dynamic.Get(config, "errno"), 0)), config, defaultServices)
 }
 
+func NewAppWithConfig(config interface{}, ss []Service) (*App, error) {
+	return NewApp(dynamic.StringValue(dynamic.Get(config, "name"), "app"), int(dynamic.IntValue(dynamic.Get(config, "errno"), 0)), config, ss)
+}
+
 func (A *App) Errno() int {
 	return A.errno
 }
@@ -400,7 +432,7 @@ func (A *App) AddService(service Service) {
 
 		A.entrys[name] = &Entry{taskType: ttype, invoke: m}
 
-		log.Println("[TASK]", name, taskType, m)
+		log.Println("[TASK]", A.qname, A.name+"/"+name, taskType, m)
 	}
 }
 

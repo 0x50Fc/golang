@@ -31,7 +31,7 @@ func (S *Service) Query(app micro.IContext, task *QueryTask) (*QueryData, error)
 
 	maxSecond := time.Duration(dynamic.IntValue(dynamic.GetWithKeys(app.GetConfig(), []string{"cache", "maxSecond"}), 60))
 
-	cacheKey := cache.SignKey("q", iid, task.Uid, n, task.P, task.Maxtime, task.Mintime)
+	cacheKey := cache.SignKey("q", iid, task.Uid, n, task.P)
 
 	if p == 1 {
 
@@ -57,8 +57,7 @@ func (S *Service) Query(app micro.IContext, task *QueryTask) (*QueryData, error)
 
 		countTask.Tid = task.Tid
 		countTask.Iid = task.Iid
-		countTask.Maxtime = task.Maxtime
-		countTask.Mintime = task.Mintime
+		countTask.Uid = task.Uid
 
 		countData, err := S.Count(app, &countTask)
 
@@ -97,16 +96,6 @@ func (S *Service) Query(app micro.IContext, task *QueryTask) (*QueryData, error)
 	if task.Uid != nil {
 		sql.WriteString(" AND uid=?")
 		args = append(args, task.Uid)
-	}
-
-	if task.Maxtime != nil {
-		sql.WriteString(" AND ctime <=?")
-		args = append(args, task.Maxtime)
-	}
-
-	if task.Mintime != nil {
-		sql.WriteString(" AND ctime >=?")
-		args = append(args, task.Mintime)
 	}
 
 	sql.WriteString(fmt.Sprintf(" ORDER BY id DESC LIMIT %d,%d", (p-1)*n, n))

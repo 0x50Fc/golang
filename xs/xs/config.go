@@ -1,4 +1,4 @@
-package main
+package xs
 
 import (
 	"encoding/json"

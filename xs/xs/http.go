@@ -1,4 +1,4 @@
-package main
+package xs
 
 import (
 	"net/http"
@@ -30,4 +30,30 @@ func (S *HttpService) HandleFunc(pattern string, handler func(resp http.Response
 		S.items = append(S.items, recycle)
 	}
 	S.Mux.HandleFunc(pattern, handler)
+}
+
+type HttpSrv struct {
+	s *HttpService
+}
+
+func (sh *HttpSrv) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	if sh.s != nil {
+		sh.s.Mux.ServeHTTP(rw, req)
+	} else {
+		rw.WriteHeader(500)
+		rw.Write([]byte{})
+	}
+}
+
+func (sh *HttpSrv) SetService(s *HttpService) {
+	if sh.s != s {
+		if sh.s != nil {
+			sh.s.Recycle()
+		}
+		sh.s = s
+	}
+}
+
+func (sh *HttpSrv) IsEmpty() bool {
+	return sh.s == nil
 }
