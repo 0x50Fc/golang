@@ -9,20 +9,15 @@ import (
 	"github.com/hailongz/golang/xs/def"
 )
 
-func In(config interface{}, s ...def.IService) error {
+func In(config interface{}, s def.IService) error {
 
-	srv := def.GetService(def.HTTP, s...).(def.IHTTPService)
+	app, err := micro.NewAppWithConfig(config, []micro.Service{&S.Service{}})
 
-	if srv != nil {
-
-		app, err := micro.NewAppWithConfig(config, []micro.Service{&S.Service{}})
-
-		if err != nil {
-			return err
-		}
-
-		srv.HandleFunc("/"+app.GetName()+"/", micro.HandleFunc(app, nil), app)
+	if err != nil {
+		return err
 	}
+
+	s.HandleFunc("/"+app.GetName()+"/", app, micro.HandleFunc(app, nil))
 
 	return nil
 

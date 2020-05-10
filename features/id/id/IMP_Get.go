@@ -19,5 +19,5 @@ func (S *Service) Get(app micro.IContext, task *GetTask) (int64, error) {
 
 	iid := v.(*iid.IID)
 
-	return iid.NewID(), nil
+	return -iid.NewID(), nil
 }

@@ -3,6 +3,7 @@ package xs
 import (
 	"errors"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"plugin"
@@ -17,7 +18,26 @@ type App struct {
 	config     interface{}
 	mtime      time.Time
 	configFile string
+	pluginFile string
 	p          *plugin.Plugin
+	s          *Service
+}
+
+func In(p *plugin.Plugin, config interface{}, s def.IService) error {
+
+	v, err := p.Lookup("In")
+
+	if err != nil {
+		return err
+	}
+
+	fn, ok := v.(def.In)
+
+	if !ok {
+		return errors.New("In fail")
+	}
+
+	return fn(config, s)
 }
 
 func NewApp(configFile string, env interface{}) (*App, error) {
@@ -33,60 +53,92 @@ func NewApp(configFile string, env interface{}) (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Println("[PLUGIN]", path)
 	p, err := GetPlugin(path)
 	if err != nil {
 		return nil, err
 	}
-	log.Println("[PLUGIN]", path, "[OK]")
-	return &App{config: config, p: p, mtime: st.ModTime(), configFile: configFile, env: env}, nil
+	s := NewService()
+	err = In(p, config, s)
+	if err != nil {
+		return nil, err
+	}
+	return &App{config: config, p: p, mtime: st.ModTime(), configFile: configFile, pluginFile: path, env: env, s: s}, nil
 }
 
 func (A *App) GetConfigFile() string {
 	return A.configFile
 }
 
-func (A *App) Valid() (bool, error) {
+func (A *App) GetPluginFile() string {
+	return A.pluginFile
+}
+
+func (A *App) Valid() error {
 
 	st, err := os.Stat(A.configFile)
 
 	if err != nil {
-		return false, err
-	}
-
-	if A.mtime != st.ModTime() {
-		config, err := GetConfigWithFileEnv(A.configFile, A.env)
-		if err != nil {
-			return false, err
-		}
-		p, err := GetPlugin(dynamic.StringValue(dynamic.Get(config, "dylib"), ""))
-		if err != nil {
-			return false, err
-		}
-		A.config = config
-		A.p = p
-		A.mtime = st.ModTime()
-		return false, nil
-	}
-
-	return true, nil
-}
-
-func (A *App) In(s ...def.IService) error {
-
-	v, err := A.p.Lookup("In")
-
-	if err != nil {
-
 		return err
 	}
 
-	fn, ok := v.(def.In)
+	if A.mtime != st.ModTime() {
 
-	if !ok {
-		return errors.New("In fail: " + A.configFile)
+		log.Println("[UPDATE]", A.configFile)
+
+		config, err := GetConfigWithFileEnv(A.configFile, A.env)
+
+		if err != nil {
+			log.Println("[ERROR] [UPDATE]", A.configFile, err)
+			return err
+		}
+
+		path, err := filepath.Abs(filepath.Join(filepath.Dir(A.configFile), dynamic.StringValue(dynamic.Get(config, "dylib"), "")))
+
+		if err != nil {
+			log.Println("[ERROR] [UPDATE]", A.configFile, err)
+			return err
+		}
+
+		p, err := GetPlugin(path)
+
+		if err != nil {
+			log.Println("[ERROR] [UPDATE]", A.configFile, err)
+			return err
+		}
+
+		s := NewService()
+		err = In(p, config, s)
+
+		if err != nil {
+			log.Println("[ERROR] [UPDATE]", A.configFile, err)
+			return err
+		}
+
+		v := A.s
+		A.s = s
+		A.config = config
+		A.pluginFile = path
+		A.mtime = st.ModTime()
+		A.p = p
+
+		v.Recycle()
+
+		log.Println("[UPDATE]", A.configFile, "DONE")
 	}
 
-	return fn(A.config, s...)
+	return nil
+}
 
+func (A *App) Recycle() {
+	if A.s != nil {
+		A.s.Recycle()
+		A.s = nil
+	}
+}
+
+func (A *App) Handle(resp http.ResponseWriter, req *http.Request) bool {
+	if A.s == nil {
+		return false
+	}
+	return A.s.Handle(resp, req)
 }

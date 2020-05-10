@@ -1,5 +1,5 @@
 {
-    "dylib":"id-1.1-local.so",
+    "dylib": "id-1.0-local.so",
     "title": "ID服务",
     "name": "kk-id",
     "errno": 4000000,
