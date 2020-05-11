@@ -49,7 +49,12 @@ func NewApp(configFile string, env interface{}) (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	path, err := filepath.Abs(filepath.Join(filepath.Dir(configFile), dynamic.StringValue(dynamic.Get(config, "dylib"), "")))
+
+	dir := filepath.Dir(configFile)
+
+	dynamic.Set(config, "dir", dir)
+
+	path, err := filepath.Abs(filepath.Join(dir, dynamic.StringValue(dynamic.Get(config, "dylib"), "")))
 	if err != nil {
 		return nil, err
 	}
@@ -92,7 +97,11 @@ func (A *App) Valid() error {
 			return err
 		}
 
-		path, err := filepath.Abs(filepath.Join(filepath.Dir(A.configFile), dynamic.StringValue(dynamic.Get(config, "dylib"), "")))
+		dir := filepath.Dir(A.configFile)
+
+		dynamic.Set(config, "dir", dir)
+
+		path, err := filepath.Abs(filepath.Join(dir, dynamic.StringValue(dynamic.Get(config, "dylib"), "")))
 
 		if err != nil {
 			log.Println("[ERROR] [UPDATE]", A.configFile, err)
